@@ -1,0 +1,24 @@
+package com.longboard.entity;
+
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Collections;
+import java.util.List;
+
+public interface IsDeck {
+
+	List<IsCard> getCards();
+
+	default boolean isEmpty() {
+		return CollectionUtils.isEmpty(getCards());
+	}
+
+	default void shuffle() {
+		Collections.shuffle(getCards());
+	}
+
+	default IsCard draw() {
+		return getCards().remove(0);
+	}
+
+}
