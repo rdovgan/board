@@ -1,10 +1,12 @@
 package com.longboard.entity;
 
 import com.longboard.base.CardType;
+import com.longboard.base.TargetType;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public interface IsCard {
+public interface IsCard extends IsTarget {
 
 	Long getNumber();
 
@@ -24,5 +26,12 @@ public interface IsCard {
 	}
 
 	void play();
+
+	Consumer<IsCard> getEffect();
+
+	@Override
+	default TargetType getTargetType() {
+		return TargetType.Card;
+	}
 
 }

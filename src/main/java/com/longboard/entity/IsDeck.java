@@ -1,11 +1,12 @@
 package com.longboard.entity;
 
+import com.longboard.base.TargetType;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
 
-public interface IsDeck {
+public interface IsDeck extends IsTarget {
 
 	List<IsCard> getCards();
 
@@ -19,6 +20,11 @@ public interface IsDeck {
 
 	default IsCard draw() {
 		return getCards().remove(0);
+	}
+
+	@Override
+	default TargetType getTargetType() {
+		return TargetType.Deck;
 	}
 
 }
