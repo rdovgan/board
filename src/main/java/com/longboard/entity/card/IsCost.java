@@ -1,4 +1,4 @@
-package com.longboard.entity;
+package com.longboard.entity.card;
 
 import com.longboard.base.Resource;
 

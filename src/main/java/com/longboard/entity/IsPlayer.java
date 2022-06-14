@@ -4,8 +4,8 @@ import com.longboard.base.Body;
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
 import com.longboard.base.TargetType;
-import com.longboard.engine.ContinuousEffects;
 import com.longboard.engine.LogUtils;
+import com.longboard.entity.card.IsCard;
 import com.longboard.exception.InitialisationException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -32,18 +32,44 @@ public interface IsPlayer extends IsTarget {
 		return Optional.ofNullable(getResources().get(resource)).orElse(0);
 	}
 
-	List<IsCard> getHand();
+	List<IsCard> getHandCards();
+	List<IsCard> getDiscardCards();
+	List<IsCard> getTableCards();
 
 	default void addCardsToHand(List<IsCard> cards) {
-		if (getHand() == null) {
+		if (getHandCards() == null) {
 			LogUtils.error("Player is not initialised properly. Hand is `null`");
 			throw new InitialisationException();
 		}
 		if (CollectionUtils.isNotEmpty(cards)) {
-			getHand().addAll(cards);
+			getHandCards().addAll(cards);
 		}
 	}
 
+	default void addCardsToDiscard(List<IsCard> cards) {
+		if (getDiscardCards() == null) {
+			LogUtils.error("Player is not initialised properly. Hand is `null`");
+			throw new InitialisationException();
+		}
+		if (CollectionUtils.isNotEmpty(cards)) {
+			getDiscardCards().addAll(cards);
+		}
+	}
+
+	default void addCardsToTable(List<IsCard> cards) {
+		if (getTableCards() == null) {
+			LogUtils.error("Player is not initialised properly. Hand is `null`");
+			throw new InitialisationException();
+		}
+		if (CollectionUtils.isNotEmpty(cards)) {
+			getTableCards().addAll(cards);
+		}
+	}
+
+	@Override
+	default TargetType getTargetType() {
+		return TargetType.Player;
+	}
 
 	Integer getCurrentHealth();
 	void changeHealth(Integer value);
@@ -63,8 +89,16 @@ public interface IsPlayer extends IsTarget {
 		}
 	}
 
-	@Override
-	default TargetType getTargetType() {
-		return TargetType.Player;
+	default void validate() {
+		if (getResource(Resource.Health) == 0) {
+			LogUtils.error("Wrong player initialisation. Health is zero");
+		}
+	}
+
+	default void postConstruct() {
+		if (CollectionUtils.isNotEmpty(getHandCards())) {
+			getHandCards().forEach(card -> card.setOwner(this));
+		}
+		validate();
 	}
 }

@@ -2,6 +2,6 @@ package com.longboard.base;
 
 public enum TargetType {
 
-	Card, Deck, Player
+	Card, Deck, Player, Item
 
 }

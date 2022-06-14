@@ -1,15 +1,9 @@
 package com.longboard.entity.item;
 
-import com.longboard.base.ItemType;
-import com.longboard.base.TargetType;
-import com.longboard.entity.IsCard;
+import com.longboard.entity.card.IsCard;
 
-public interface IsCardItem extends IsCard, IsItem {
+public interface IsCardItem extends IsCard {
 
-	ItemType getType();
-
-	default TargetType getTargetType() {
-		return TargetType.Card;
-	}
+	IsItem getItem();
 
 }

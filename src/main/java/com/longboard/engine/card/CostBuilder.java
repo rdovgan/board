@@ -1,7 +1,7 @@
-package com.longboard.engine;
+package com.longboard.engine.card;
 
 import com.longboard.base.Resource;
-import com.longboard.entity.IsCost;
+import com.longboard.entity.card.IsCost;
 
 import java.util.HashMap;
 import java.util.Map;
