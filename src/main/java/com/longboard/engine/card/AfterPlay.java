@@ -20,7 +20,7 @@ public class AfterPlay {
 			card.getOwner().addCardsToTable(Collections.singletonList(card));
 			break;
 		case ToHand:
-			card.getOwner().addCardsToHand(Collections.singletonList(card));
+			card.getOwner().addCardToHand(card);
 			break;
 		case Burn:
 			card.setOwner(null);

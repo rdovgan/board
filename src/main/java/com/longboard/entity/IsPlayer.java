@@ -36,6 +36,18 @@ public interface IsPlayer extends IsTarget {
 	List<IsCard> getDiscardCards();
 	List<IsCard> getTableCards();
 
+	default void addCardToHand(IsCard card) {
+		if (getHandCards() == null) {
+			LogUtils.error("Player is not initialised properly. Hand is `null`");
+			throw new InitialisationException();
+		}
+		if (card != null) {
+			getHandCards().add(card);
+		} else {
+			LogUtils.error("Card is `null`");
+		}
+	}
+
 	default void addCardsToHand(List<IsCard> cards) {
 		if (getHandCards() == null) {
 			LogUtils.error("Player is not initialised properly. Hand is `null`");
@@ -43,6 +55,8 @@ public interface IsPlayer extends IsTarget {
 		}
 		if (CollectionUtils.isNotEmpty(cards)) {
 			getHandCards().addAll(cards);
+		} else {
+			LogUtils.error("Card list is empty");
 		}
 	}
 
