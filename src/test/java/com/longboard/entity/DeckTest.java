@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DeckTest implements IsDeck {
+public class DeckTest implements IsDeck<IsCard> {
 
 	private final UUID id = UUID.randomUUID();
 

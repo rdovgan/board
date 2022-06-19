@@ -7,9 +7,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 
-public interface IsDeck extends IsTarget {
+public interface IsDeck<T> extends IsTarget {
 
-	List<IsCard> getCards();
+	List<T> getCards();
 
 	default boolean isEmpty() {
 		return CollectionUtils.isEmpty(getCards());
@@ -19,7 +19,7 @@ public interface IsDeck extends IsTarget {
 		Collections.shuffle(getCards());
 	}
 
-	default IsCard draw() {
+	default T draw() {
 		return getCards().remove(0);
 	}
 
