@@ -1,54 +1,53 @@
 package com.longboard.game.durak.card;
 
+import com.longboard.entity.IsDeck;
+import com.longboard.entity.card.IsCard;
+import com.longboard.game.durak.engine.DurakCardDeckUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
-public class DurakCardDeck {
+public class DurakCardDeck implements IsDeck<PlayingCard36> {
 
-	public Set<PlayingCard36> buildNewDeck() {
-		Set<PlayingCard36> deck = new HashSet<>();
+	private final UUID id = UUID.randomUUID();
+	private List<PlayingCard36> deck;
+	private PlayingCard36 trump;
+	private List<PlayingCard36> discard;
 
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Ace));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.King));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Queen));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Jack));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Ten));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Nine));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Eight));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Seven));
-		deck.add(new PlayingCard36(CardSuit.Club, CardRank.Six));
+	private DurakCardDeck() {
+	}
 
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Ace));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.King));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Queen));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Jack));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Ten));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Nine));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Eight));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Seven));
-		deck.add(new PlayingCard36(CardSuit.Diamond, CardRank.Six));
+	public static DurakCardDeck initialise() {
+		DurakCardDeck cardDeck = new DurakCardDeck();
+		cardDeck.discard = new ArrayList<>();
+		cardDeck.deck = new ArrayList<>(DurakCardDeckUtils.buildNewDeck());
+		Collections.shuffle(cardDeck.deck, new Random(UUID.randomUUID().timestamp()));
+		cardDeck.trump = cardDeck.draw();
+		return cardDeck;
+	}
 
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Ace));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.King));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Queen));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Jack));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Ten));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Nine));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Eight));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Seven));
-		deck.add(new PlayingCard36(CardSuit.Heart, CardRank.Six));
-
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Ace));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.King));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Queen));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Jack));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Ten));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Nine));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Eight));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Seven));
-		deck.add(new PlayingCard36(CardSuit.Spade, CardRank.Six));
-
+	@Override
+	public List<PlayingCard36> getCards() {
 		return deck;
 	}
 
+	@Override
+	public UUID getId() {
+		return id;
+	}
+
+	public PlayingCard36 getTrump() {
+		return trump;
+	}
+
+	public PlayingCard36 drawTrump() {
+		PlayingCard36 card = trump;
+		this.trump = null;
+		return card;
+	}
 }
