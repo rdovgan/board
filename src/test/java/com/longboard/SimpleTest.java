@@ -2,6 +2,7 @@ package com.longboard;
 
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
+import com.longboard.entity.CardTest;
 import com.longboard.entity.card.IsCard;
 import com.longboard.entity.IsPlayer;
 import com.longboard.entity.PlayerTest;
@@ -20,8 +21,8 @@ public class SimpleTest {
 	 * Test Red Player with 10 Mana, 0 Exp and 50 Gold going to play 2 Cards.
 	 */
 
-	private IsPlayer redPlayer;
-	private List<IsCard> playersDeck;
+	private PlayerTest redPlayer;
+	private List<CardTest> playersDeck;
 
 	private static final Integer START_MANA = 10;
 	private static final Integer START_GOLD = 50;
@@ -34,14 +35,14 @@ public class SimpleTest {
 		return hand;
 	}
 
-	private List<IsCard> initDeck() {
-		List<IsCard> deck = new ArrayList<>();
+	private List<CardTest> initDeck() {
+		List<CardTest> deck = new ArrayList<>();
 		deck.add(TestResourcesPool.HARD_MINING);
 		deck.add(TestResourcesPool.IRON_SWORD_CARD);
 		return deck;
 	}
 
-	private IsPlayer initPlayer() {
+	private PlayerTest initPlayer() {
 		Map<Resource, Integer> resources = new HashMap<>();
 		resources.put(Resource.Mana, START_MANA);
 		resources.put(Resource.Gold, START_GOLD);
@@ -53,7 +54,7 @@ public class SimpleTest {
 	@BeforeEach
 	public void initialise() {
 		redPlayer = initPlayer();
-		redPlayer.postConstruct();
+		redPlayer.validate();
 		playersDeck = initDeck();
 	}
 

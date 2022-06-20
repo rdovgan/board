@@ -23,7 +23,7 @@ public class ResourceUtils {
 		return false;
 	}
 
-	public void addResourceToPlayer(IsPlayer player, Resource resource, Integer value) {
+	public void addResourceToPlayer(IsPlayer<IsCard> player, Resource resource, Integer value) {
 		if (validatePlayerAndResources(player, value)) {
 			return;
 		}
@@ -32,7 +32,7 @@ public class ResourceUtils {
 		LogUtils.info("Increased resource " + resource.name() + " for player " + player.getName() + " by " + value + ". Now it has " + (previousValue + value));
 	}
 
-	public void subResourcesFromPlayer(IsPlayer player, Resource resource, Integer value) {
+	public void subResourcesFromPlayer(IsPlayer<IsCard> player, Resource resource, Integer value) {
 		if (validatePlayerAndResources(player, value)) {
 			return;
 		}
@@ -44,7 +44,7 @@ public class ResourceUtils {
 		LogUtils.info("Decreased resource " + resource.name() + " for player " + player.getName() + " by " + value + ". Now it has " + (previousValue - value));
 	}
 
-	private Integer checkResource(IsPlayer player, Resource resource, Integer value) {
+	private Integer checkResource(IsPlayer<IsCard> player, Resource resource, Integer value) {
 		Integer previousValue = player.getResources().get(resource);
 		if (previousValue == null || previousValue < value) {
 			LogUtils.error("Player " + player.getName() + " can't pay " + value + " " + resource.name() + " resource. Available only " + previousValue);

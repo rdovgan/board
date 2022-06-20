@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IsPlayer extends IsTarget {
+public interface IsPlayer<C> extends IsTarget {
 
 	Integer MAX_HEALTH = 30;
 
@@ -32,11 +32,11 @@ public interface IsPlayer extends IsTarget {
 		return Optional.ofNullable(getResources().get(resource)).orElse(0);
 	}
 
-	List<IsCard> getHandCards();
-	List<IsCard> getDiscardCards();
-	List<IsCard> getTableCards();
+	List<C> getHandCards();
+	List<C> getDiscardCards();
+	List<C> getTableCards();
 
-	default void addCardToHand(IsCard card) {
+	default void addCardToHand(C card) {
 		if (getHandCards() == null) {
 			LogUtils.error("Player is not initialised properly. Hand is `null`");
 			throw new InitialisationException();
@@ -48,19 +48,20 @@ public interface IsPlayer extends IsTarget {
 		}
 	}
 
-	default void addCardsToHand(List<IsCard> cards) {
+	default void addCardsToHand(List<C> cards) {
 		if (getHandCards() == null) {
 			LogUtils.error("Player is not initialised properly. Hand is `null`");
 			throw new InitialisationException();
 		}
 		if (CollectionUtils.isNotEmpty(cards)) {
+			cards.forEach(card -> ((IsCard)(card)).setOwner(this));
 			getHandCards().addAll(cards);
 		} else {
 			LogUtils.error("Card list is empty");
 		}
 	}
 
-	default void addCardsToDiscard(List<IsCard> cards) {
+	default void addCardsToDiscard(List<C> cards) {
 		if (getDiscardCards() == null) {
 			LogUtils.error("Player is not initialised properly. Hand is `null`");
 			throw new InitialisationException();
@@ -70,7 +71,7 @@ public interface IsPlayer extends IsTarget {
 		}
 	}
 
-	default void addCardsToTable(List<IsCard> cards) {
+	default void addCardsToTable(List<C> cards) {
 		if (getTableCards() == null) {
 			LogUtils.error("Player is not initialised properly. Hand is `null`");
 			throw new InitialisationException();
@@ -104,15 +105,12 @@ public interface IsPlayer extends IsTarget {
 	}
 
 	default void validate() {
-		if (getResource(Resource.Health) == 0) {
+		if (getCurrentHealth() == 0) {
 			LogUtils.error("Wrong player initialisation. Health is zero");
+		}
+		if (getHandCards() == null || getHandCards().stream().anyMatch(card -> ((IsCard)(card)).getOwner() != null)) {
+			LogUtils.error("Wrong player initialisation. There is card in hand without owner link");
 		}
 	}
 
-	default void postConstruct() {
-		if (CollectionUtils.isNotEmpty(getHandCards())) {
-			getHandCards().forEach(card -> card.setOwner(this));
-		}
-		validate();
-	}
 }

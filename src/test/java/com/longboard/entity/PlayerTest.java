@@ -28,6 +28,9 @@ public class PlayerTest implements IsPlayer {
 		this.name = name;
 		this.color = color;
 		this.hand = hand;
+		if (this.hand != null) {
+			this.hand.forEach(card -> card.setOwner(this));
+		}
 		this.resources = resources;
 	}
 
