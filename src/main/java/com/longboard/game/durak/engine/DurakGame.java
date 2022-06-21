@@ -3,16 +3,16 @@ package com.longboard.game.durak.engine;
 import com.longboard.base.PlayerColor;
 import com.longboard.engine.LogUtils;
 import com.longboard.entity.IsPlayer;
-import com.longboard.entity.card.IsCard;
-import com.longboard.game.durak.card.CardRank;
 import com.longboard.game.durak.card.DurakCardDeck;
 import com.longboard.game.durak.card.PlayingCard36;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -26,7 +26,8 @@ public class DurakGame {
 	private DurakCardDeck deck;
 	private PlayingCard36 trump;
 
-	private Set<IsPlayer<PlayingCard36>> players = new HashSet<>();
+	private List<IsPlayer<PlayingCard36>> activePlayers = new LinkedList<>();
+	private Map<Integer, IsPlayer<PlayingCard36>> playersScore = new HashMap<>();
 
 	public void initialiseGame(int playersCount) {
 		if (playersCount < MIN_PLAYERS_COUNT || playersCount > MAX_PLAYERS_COUNT) {
@@ -40,12 +41,12 @@ public class DurakGame {
 			IntStream.of(CARDS_COUNT_IN_HAND_ON_START).forEach(i -> playerHand.add(deck.draw()));
 			DurakPlayer player = new DurakPlayer(currentPlayer + " player", PlayerColor.Green, playerHand);
 			player.validate();
-			this.players.add(player);
+			this.activePlayers.add(player);
 		}
 	}
 
 	public IsPlayer<PlayingCard36> defineFirstPlayer() {
-		if (CollectionUtils.isEmpty(players)) {
+		if (CollectionUtils.isEmpty(activePlayers)) {
 			LogUtils.error("Players initialisation is wrong");
 			return null;
 		}
@@ -54,7 +55,7 @@ public class DurakGame {
 		if (trump == null) {
 			LogUtils.error("Trump card initialisation is wrong");
 		}
-		for (IsPlayer<PlayingCard36> player : players) {
+		for (IsPlayer<PlayingCard36> player : activePlayers) {
 			Integer minTrumpCardRankOfPlayer = player.getHandCards().stream().filter(card -> card.getSuit() == trump.getSuit()).map(card -> card.getRank().getValue()).min(Integer::compare).orElse(null);
 			if (minTrumpCardRank == null || minTrumpCardRankOfPlayer != null && minTrumpCardRankOfPlayer < minTrumpCardRank) {
 				minTrumpCardRank = minTrumpCardRankOfPlayer;
@@ -63,5 +64,22 @@ public class DurakGame {
 		}
 		return playerToPlayFirst;
 	}
+
+	public IsPlayer<PlayingCard36> definePlayerToAttack(IsPlayer<PlayingCard36> attacker) {
+		if (CollectionUtils.isEmpty(this.activePlayers) || this.activePlayers.size() < MIN_PLAYERS_COUNT) {
+			LogUtils.error("Wrong players count. Game cannot be processed");
+			return null;
+		}
+	}
+
+	private void defineWinner() {
+
+	}
+
+	private void endGame() {
+
+	}
+
+
 
 }
