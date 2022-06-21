@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,18 @@ public class DurakGame {
 			LogUtils.error("Wrong players count. Game cannot be processed");
 			return null;
 		}
+		Iterator<IsPlayer<PlayingCard36>> iterator = this.activePlayers.iterator();
+		while (iterator.hasNext()) {
+			if (iterator.next() == attacker) {
+				if (iterator.hasNext()) {
+					return iterator.next();
+				} else {
+					return this.activePlayers.stream().findFirst().orElse(null);
+				}
+			}
+		}
+		LogUtils.error("Couldn't find attacker in active pool of players");
+		return null;
 	}
 
 	private void defineWinner() {
