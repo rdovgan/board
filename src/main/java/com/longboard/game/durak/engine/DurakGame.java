@@ -19,10 +19,10 @@ import java.util.stream.IntStream;
 
 public class DurakGame {
 
-	private final int MIN_PLAYERS_COUNT = 2;
-	private final int MAX_PLAYERS_COUNT = 6;
+	public final int MIN_PLAYERS_COUNT = 2;
+	public final int MAX_PLAYERS_COUNT = 6;
 
-	private final int CARDS_COUNT_IN_HAND_ON_START = 6;
+	public final int CARDS_COUNT_IN_HAND_ON_START = 6;
 
 	private DurakCardDeck deck;
 	private PlayingCard36 trump;
@@ -30,6 +30,12 @@ public class DurakGame {
 	private List<IsPlayer<PlayingCard36>> activePlayers = new LinkedList<>();
 	private Map<Integer, IsPlayer<PlayingCard36>> playersScore = new HashMap<>();
 
+	/**
+	 * Defined game data for provided amount of players.
+	 * Initialise deck for game with 36 cards. Defines a trump card. Give {@value #CARDS_COUNT_IN_HAND_ON_START} cards to each player.
+	 *
+	 * @param playersCount should be not greater than {@value #MAX_PLAYERS_COUNT} and not less than {@value #MIN_PLAYERS_COUNT}
+	 */
 	public void initialiseGame(int playersCount) {
 		if (playersCount < MIN_PLAYERS_COUNT || playersCount > MAX_PLAYERS_COUNT) {
 			LogUtils.error("Wrong players count. Should be not less than " + MIN_PLAYERS_COUNT + " and not greater than " + MAX_PLAYERS_COUNT);
@@ -46,6 +52,11 @@ public class DurakGame {
 		}
 	}
 
+	/**
+	 * Defines a player with the smallest trump card in hand. If there is no any trump card in players' hand, first player will be chosen randomly.
+	 *
+	 * @return player to attack first
+	 */
 	public IsPlayer<PlayingCard36> defineFirstPlayer() {
 		if (CollectionUtils.isEmpty(activePlayers)) {
 			LogUtils.error("Players initialisation is wrong");
@@ -66,6 +77,12 @@ public class DurakGame {
 		return playerToPlayFirst;
 	}
 
+	/**
+	 * Define an opponent for provided player. Should be at least {@value #MIN_PLAYERS_COUNT} active players in game.
+	 *
+	 * @param attacker provided player
+	 * @return next player after {@param attacker}
+	 */
 	public IsPlayer<PlayingCard36> definePlayerToAttack(IsPlayer<PlayingCard36> attacker) {
 		if (CollectionUtils.isEmpty(this.activePlayers) || this.activePlayers.size() < MIN_PLAYERS_COUNT) {
 			LogUtils.error("Wrong players count. Game cannot be processed");
@@ -85,11 +102,11 @@ public class DurakGame {
 		return null;
 	}
 
-	private void defineWinner() {
+	public void defineWinner() {
 
 	}
 
-	private void endGame() {
+	public void endGame() {
 
 	}
 
