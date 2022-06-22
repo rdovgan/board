@@ -23,8 +23,8 @@ public interface IsCard extends IsTarget {
 
 	Predicate<IsCard> getCondition();
 
-	void setOwner(IsPlayer player);
-	IsPlayer getOwner();
+	void setOwner(IsPlayer<IsCard> player);
+	IsPlayer<IsCard> getOwner();
 
 	default boolean hasOwner() {
 		return getOwner() != null;

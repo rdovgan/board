@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface IsPlayer<C> extends IsTarget {
+public interface IsPlayer<C extends IsCard> extends IsTarget {
 
 	Integer MAX_HEALTH = 30;
 
@@ -54,7 +54,7 @@ public interface IsPlayer<C> extends IsTarget {
 			throw new InitialisationException();
 		}
 		if (CollectionUtils.isNotEmpty(cards)) {
-			cards.forEach(card -> ((IsCard)(card)).setOwner(this));
+			cards.forEach(card -> card.setOwner((IsPlayer<IsCard>) this));
 			getHandCards().addAll(cards);
 		} else {
 			LogUtils.error("Card list is empty");
@@ -108,7 +108,7 @@ public interface IsPlayer<C> extends IsTarget {
 		if (getCurrentHealth() == 0) {
 			LogUtils.error("Wrong player initialisation. Health is zero");
 		}
-		if (getHandCards() == null || getHandCards().stream().anyMatch(card -> ((IsCard)(card)).getOwner() != null)) {
+		if (getHandCards() == null || getHandCards().stream().anyMatch(card -> card.getOwner() != null)) {
 			LogUtils.error("Wrong player initialisation. There is card in hand without owner link");
 		}
 	}
