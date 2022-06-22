@@ -1,15 +1,21 @@
 package com.longboard.game.durak.card;
 
 public enum CardSuit {
-	Club("♣️"), Diamond("♦️"), Heart("♥️"), Spade("♠️");
+	Club("♣️", 1), Diamond("♦️", 2), Heart("♥️", 3), Spade("♠️", 4);
 
 	String symbol;
+	Integer value;
 
-	CardSuit(String symbol) {
+	CardSuit(String symbol, Integer value) {
 		this.symbol = symbol;
+		this.value = value;
 	}
 
-	public void setSymbol(String symbol) {
-		this.symbol = symbol;
+	public String getSymbol() {
+		return symbol;
+	}
+
+	public Integer getValue() {
+		return value;
 	}
 }
