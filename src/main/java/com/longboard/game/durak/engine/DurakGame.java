@@ -112,6 +112,22 @@ public class DurakGame {
 
 	}
 
+	public List<PlayingCard36> getDeck() {
+		if (this.deck == null) {
+			return new LinkedList<>();
+		}
+		return Collections.unmodifiableList(this.deck.getCards());
+	}
 
+	public PlayingCard36 getTrump() {
+		return this.trump;
+	}
+
+	public List<IsPlayer<PlayingCard36>> getActivePlayers() {
+		if (this.activePlayers == null) {
+			return new LinkedList<>();
+		}
+		return Collections.unmodifiableList(this.activePlayers);
+	}
 
 }
