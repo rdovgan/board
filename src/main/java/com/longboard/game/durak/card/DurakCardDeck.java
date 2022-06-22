@@ -26,7 +26,7 @@ public class DurakCardDeck implements IsDeck<PlayingCard36> {
 		DurakCardDeck cardDeck = new DurakCardDeck();
 		cardDeck.discard = new ArrayList<>();
 		cardDeck.deck = new ArrayList<>(DurakCardDeckUtils.buildNewDeck());
-		Collections.shuffle(cardDeck.deck, new Random(UUID.randomUUID().timestamp()));
+		Collections.shuffle(cardDeck.deck, new Random(UUID.randomUUID().getMostSignificantBits()));
 		cardDeck.trump = cardDeck.draw();
 		return cardDeck;
 	}
