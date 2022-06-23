@@ -1,15 +1,15 @@
 package com.longboard.game.durak.card;
 
+import com.longboard.engine.LogUtils;
 import com.longboard.entity.IsDeck;
-import com.longboard.entity.card.IsCard;
+import com.longboard.exception.GameException;
 import com.longboard.game.durak.engine.DurakCardDeckUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.UUID;
 
 public class DurakCardDeck implements IsDeck<PlayingCard36> {
@@ -49,5 +49,17 @@ public class DurakCardDeck implements IsDeck<PlayingCard36> {
 		PlayingCard36 card = trump;
 		this.trump = null;
 		return card;
+	}
+
+	@Override
+	public PlayingCard36 draw() {
+		if (CollectionUtils.isNotEmpty(getCards())) {
+			return getCards().remove(0);
+		}
+		if (getTrump() != null) {
+			return drawTrump();
+		}
+		LogUtils.error("There is no cards left");
+		throw new GameException("There is no cards left");
 	}
 }
