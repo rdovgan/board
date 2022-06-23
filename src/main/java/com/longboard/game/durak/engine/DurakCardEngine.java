@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class DurakCardEngine {
 
-	public boolean canBeat(PlayingCard36 cardToPlay, PlayingCard36 attacker, CardSuit trump) {
+	public static boolean canBeat(PlayingCard36 cardToPlay, PlayingCard36 attacker, CardSuit trump) {
 		if (attacker == null || cardToPlay == null) {
 			LogUtils.error("Can't play card. Wrong initialisation");
 			return false;
@@ -19,7 +19,7 @@ public class DurakCardEngine {
 				&& attacker.getSuit() != trump);
 	}
 
-	public boolean canAttack(PlayingCard36 cardToPlay, List<PlayingCard36> playedCards) {
+	public static boolean canAttack(PlayingCard36 cardToPlay, List<PlayingCard36> playedCards) {
 		if (cardToPlay == null) {
 			LogUtils.error("Wrong card initialisation");
 			return false;
