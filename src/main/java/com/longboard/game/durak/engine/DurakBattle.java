@@ -1,6 +1,8 @@
 package com.longboard.game.durak.engine;
 
 import com.longboard.entity.IsPlayer;
+import com.longboard.exception.GameException;
+import com.longboard.exception.InitialisationException;
 import com.longboard.game.durak.card.CardBattle;
 import com.longboard.game.durak.card.CardRank;
 import com.longboard.game.durak.card.CardSuit;
@@ -9,8 +11,10 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DurakBattle {
 
@@ -36,6 +40,36 @@ public class DurakBattle {
 
 	public List<PlayingCard36> getCardsForDefend(PlayingCard36 attackCard) {
 		return attacker.getHandCards().stream().filter(card -> DurakCardEngine.canBeat(card, attackCard, trump)).collect(Collectors.toList());
+	}
+
+	public void playCardToAttack(PlayingCard36 cardForAttack) {
+		if (cardForAttack == null) {
+			throw new InitialisationException();
+		}
+		if (!Objects.equals(cardForAttack.getOwner().getId(), attacker.getId())) {
+			throw new GameException("Wrong card parameter. The card " + cardForAttack.getName() + " not belong to attacker");
+		}
+		if (DurakCardEngine.canAttack(cardForAttack,
+				Stream.concat(battlingCards.getBattlingCards().values().stream(), battlingCards.getBattlingCards().keySet().stream())
+						.collect(Collectors.toList()))) {
+			battlingCards.addAttackerCard(cardForAttack);
+		} else {
+			throw new GameException("The card " + cardForAttack.getName() + " can't be played");
+		}
+	}
+
+	public void playCardToDefend(PlayingCard36 cardToDefend, PlayingCard36 cardToBeat) {
+		if (cardToDefend == null) {
+			throw new InitialisationException();
+		}
+		if (!Objects.equals(cardToDefend.getOwner().getId(), defender.getId())) {
+			throw new GameException("Wrong card parameter. The card " + cardToDefend.getName() + " not belong to defender");
+		}
+		if (DurakCardEngine.canBeat(cardToDefend, cardToBeat, trump)) {
+			battlingCards.addDefendingCard(cardToDefend, cardToBeat);
+		} else {
+			throw new GameException("The card " + cardToDefend.getName() + " can't be played");
+		}
 	}
 
 	/**
