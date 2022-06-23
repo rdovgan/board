@@ -20,8 +20,7 @@ public class CardTest implements IsCard {
 	private IsPlayer owner;
 	private Consumer<IsCard> effect;
 
-	public CardTest(Long number, String name, String description, CardType cardType, IsCost cost, Predicate<IsCard> condition,
-			Consumer<IsCard> effect) {
+	public CardTest(Long number, String name, String description, CardType cardType, IsCost cost, Predicate<IsCard> condition, Consumer<IsCard> effect) {
 		this.number = number;
 		this.name = name;
 		this.description = description;

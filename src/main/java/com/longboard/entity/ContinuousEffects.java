@@ -3,8 +3,6 @@ package com.longboard.entity;
 import com.longboard.entity.card.IsCard;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class ContinuousEffects {

@@ -5,7 +5,6 @@ import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
 import com.longboard.entity.ContinuousEffects;
 import com.longboard.entity.IsPlayer;
-import com.longboard.entity.card.IsCard;
 import com.longboard.game.durak.card.PlayingCard36;
 
 import java.util.List;

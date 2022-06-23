@@ -1,7 +1,6 @@
 package com.longboard.entity;
 
 import com.longboard.base.TargetType;
-import com.longboard.entity.card.IsCard;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collections;

@@ -13,8 +13,8 @@ public class CardItemTest extends CardTest implements IsCardItem {
 
 	private final IsItem item;
 
-	public CardItemTest(Long number, String name, String description, CardType cardType, IsCost cost, Predicate<IsCard> condition,
-			Consumer<IsCard> effect, IsItem item) {
+	public CardItemTest(Long number, String name, String description, CardType cardType, IsCost cost, Predicate<IsCard> condition, Consumer<IsCard> effect,
+			IsItem item) {
 		super(number, name, description, cardType, cost, condition, effect);
 		this.item = item;
 	}

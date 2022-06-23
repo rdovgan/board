@@ -1,10 +1,8 @@
 package com.longboard.game.durak.engine;
 
-import com.longboard.base.PlayerColor;
 import com.longboard.entity.IsPlayer;
 import com.longboard.exception.InitialisationException;
 import com.longboard.game.durak.card.CardRank;
-import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Assertions;
@@ -12,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DurakGameTest {
 
@@ -45,7 +41,8 @@ class DurakGameTest {
 		IsPlayer<PlayingCard36> firstPlayer = game.defineFirstPlayer();
 		Assertions.assertNotNull(firstPlayer);
 		PlayingCard36 minTrumpCardInFirstPlayerHand = firstPlayer.getHandCards().stream()
-				.filter(card -> Objects.equals(card.getRank().getValue(), CardRank.Six.getValue()) && card.getSuit() == game.getTrump().getSuit()).findFirst().orElse(null);
+				.filter(card -> Objects.equals(card.getRank().getValue(), CardRank.Six.getValue()) && card.getSuit() == game.getTrump().getSuit()).findFirst()
+				.orElse(null);
 		Assertions.assertNotNull(minTrumpCardInFirstPlayerHand);
 		Assertions.assertEquals(CardRank.Six, minTrumpCardInFirstPlayerHand.getRank());
 		Assertions.assertEquals(game.getTrump().getSuit(), minTrumpCardInFirstPlayerHand.getSuit());

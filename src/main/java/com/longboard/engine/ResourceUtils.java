@@ -1,9 +1,9 @@
 package com.longboard.engine;
 
 import com.longboard.base.Resource;
+import com.longboard.entity.IsPlayer;
 import com.longboard.entity.card.IsCard;
 import com.longboard.entity.card.IsCost;
-import com.longboard.entity.IsPlayer;
 
 public class ResourceUtils {
 

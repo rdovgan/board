@@ -19,8 +19,11 @@ public interface IsPlayer<C extends IsCard> extends IsTarget {
 	Integer MAX_HEALTH = 30;
 
 	String getName();
+
 	PlayerColor getColor();
+
 	ContinuousEffects getContinuousEffects();
+
 	Body getBody();
 
 	Map<Resource, Integer> getResources();
@@ -33,7 +36,9 @@ public interface IsPlayer<C extends IsCard> extends IsTarget {
 	}
 
 	List<C> getHandCards();
+
 	List<C> getDiscardCards();
+
 	List<C> getTableCards();
 
 	default void addCardToHand(C card) {
@@ -87,6 +92,7 @@ public interface IsPlayer<C extends IsCard> extends IsTarget {
 	}
 
 	Integer getCurrentHealth();
+
 	void changeHealth(Integer value);
 
 	default Integer getMaxHealth() {

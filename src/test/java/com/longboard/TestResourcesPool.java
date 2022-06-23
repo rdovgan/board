@@ -8,8 +8,6 @@ import com.longboard.engine.card.CostBuilder;
 import com.longboard.engine.item.WeaponBuilder;
 import com.longboard.entity.CardItemTest;
 import com.longboard.entity.CardTest;
-import com.longboard.entity.card.IsCard;
-import com.longboard.entity.item.IsCardItem;
 import com.longboard.entity.item.IsWeapon;
 
 public class TestResourcesPool {

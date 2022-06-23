@@ -10,6 +10,7 @@ import com.longboard.entity.IsTarget;
 public interface IsItem extends IsTarget {
 
 	String getName();
+
 	String getDescription();
 
 	Body.BodyPart appliedTo();

@@ -2,7 +2,6 @@ package com.longboard.engine.card;
 
 import com.longboard.base.Resource;
 import com.longboard.engine.LogUtils;
-import com.longboard.entity.IsPlayer;
 import com.longboard.entity.card.IsCard;
 import com.longboard.entity.item.IsCardItem;
 import com.longboard.entity.item.IsItem;

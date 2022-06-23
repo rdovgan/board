@@ -15,6 +15,7 @@ public interface IsCard extends IsTarget {
 	Long getNumber();
 
 	String getName();
+
 	String getDescription();
 
 	CardType getCardType();
@@ -24,6 +25,7 @@ public interface IsCard extends IsTarget {
 	Predicate<IsCard> getCondition();
 
 	void setOwner(IsPlayer<IsCard> player);
+
 	IsPlayer<IsCard> getOwner();
 
 	default boolean hasOwner() {

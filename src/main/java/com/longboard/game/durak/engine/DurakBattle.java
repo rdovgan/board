@@ -33,13 +33,13 @@ public class DurakBattle {
 		}
 		return attacker.getHandCards().stream().filter(card -> battlingCardsRank.contains(card.getRank())).collect(Collectors.toList());
 	}
-	
+
 	public List<PlayingCard36> getCardsForDefend(PlayingCard36 attackCard) {
 		return attacker.getHandCards().stream().filter(card -> DurakCardEngine.canBeat(card, attackCard, trump)).collect(Collectors.toList());
 	}
 
 	/**
-	 * Defines a player who won a current battle based on battling cards. 
+	 * Defines a player who won a current battle based on battling cards.
 	 * If there is any attacker card in map that didn't match with defender one, attacker player won. In other case, defender won the battle
 	 *
 	 * @return a player who won the battle

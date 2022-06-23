@@ -1,6 +1,5 @@
 package com.longboard.game.durak.engine;
 
-import com.longboard.entity.card.IsCard;
 import com.longboard.game.durak.card.CardRank;
 import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
