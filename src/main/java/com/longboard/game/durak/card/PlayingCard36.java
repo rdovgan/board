@@ -21,7 +21,7 @@ public class PlayingCard36 implements IsCard {
 		this.suit = suit;
 		this.rank = rank;
 		this.number = (long) (suit.getValue() + rank.getValue());
-		this.name = suit.getSymbol() + rank.getSymbol();
+		this.name = rank.getSymbol() + suit.getSymbol();
 	}
 
 	public CardSuit getSuit() {
