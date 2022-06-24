@@ -106,49 +106,17 @@ public class DurakGameDisplay extends Frame {
 				.collect(Collectors.toList());
 		int width = topPlayerPanel.getWidth() / 5;
 		int height = topPlayerPanel.getHeight();
-		IntStream.range(0, opponents.size()).forEach(i -> {
-			IsPlayer<PlayingCard36> opponent = opponents.get(i);
-			Panel playerPanel = new Panel();
-			playerPanel.setName(opponent.getId().toString());
-			playerPanel.setBounds(i * width + padding, padding * 3, width - padding, height - 4 * padding);
-			playerPanel.setBackground(Color.CYAN);
+		//Draw opponents area on top panel
+		IntStream.range(0, opponents.size()).forEach(i -> drawOpponentArea(opponents, width, height, i));
 
-			Label opponentName = new Label(opponent.getName());
-			opponentName.setBounds(0, padding * 2, width - 2 * padding, padding * 4);
-			opponentName.setAlignment(Label.CENTER);
-			playerPanel.add(opponentName);
+		Button trumpCard = drawTrumpCard();
 
-			Button buttonCardsCount = new Button();
-			buttonCardsCount.setBounds(padding, padding * 8, width - 4 * padding, height / 2);
-			buttonCardsCount.setLabel(String.valueOf(opponent.getHandCards().size()));
-			buttonCardsCount.setFont(new Font("Arial", Font.PLAIN, 40));
-			buttonCardsCount.setForeground(Color.GRAY);
-			playerPanel.add(buttonCardsCount);
+		drawDeckWithCounter(width, height, trumpCard);
 
-			topPlayerPanel.add(playerPanel);
-		});
+		drawPlayersHand();
+	}
 
-		Button trumpCard = new Button();
-		trumpCard.setBounds(padding * 8, padding * 4, cardWidth, cardHeight);
-		trumpCard.setLabel(game.getTrump().getName());
-		trumpCard.setFont(new Font("Arial", Font.PLAIN, 38));
-		if (game.getTrump().getSuit() == CardSuit.Heart || game.getTrump().getSuit() == CardSuit.Diamond) {
-			trumpCard.setForeground(Color.RED);
-		}
-		middlePanel.add(trumpCard);
-
-		if (game.getDeck().size() > 0) {
-			Button deckButton = new Button();
-			deckButton.setBounds(width + padding * 6, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
-			deckButton.setLabel(String.valueOf(game.getDeck().size()));
-			deckButton.setFont(new Font("Arial", Font.PLAIN, 48));
-			deckButton.setBackground(new Color(170, 83, 91));
-			deckButton.setForeground(Color.GREEN);
-			middlePanel.add(deckButton);
-		} else {
-			trumpCard.setEnabled(false);
-		}
-
+	private void drawPlayersHand() {
 		List<PlayingCard36> cardsInHand = currentPlayer.getHandCards().stream()
 				.sorted(Comparator.comparing(card -> card.getRank().getValue())).sorted(Comparator.comparing(card -> card.getSuit().getValue())).collect(Collectors.toList());
 		IntStream.range(0, cardsInHand.size()).forEach(i -> {
@@ -163,6 +131,54 @@ public class DurakGameDisplay extends Frame {
 			}
 			bottomPlayerPanel.add(cardButton);
 		});
+	}
+
+	private void drawDeckWithCounter(int width, int height, Button trumpCard) {
+		if (game.getDeck().size() > 0) {
+			Button deckButton = new Button();
+			deckButton.setBounds(width + padding * 6, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
+			deckButton.setLabel(String.valueOf(game.getDeck().size()));
+			deckButton.setFont(new Font("Arial", Font.PLAIN, 48));
+			deckButton.setBackground(new Color(170, 83, 91));
+			deckButton.setForeground(Color.GREEN);
+			middlePanel.add(deckButton);
+		} else {
+			trumpCard.setEnabled(false);
+		}
+	}
+
+	private Button drawTrumpCard() {
+		Button trumpCard = new Button();
+		trumpCard.setBounds(padding * 8, padding * 4, cardWidth, cardHeight);
+		trumpCard.setLabel(game.getTrump().getName());
+		trumpCard.setFont(new Font("Arial", Font.PLAIN, 38));
+		if (game.getTrump().getSuit() == CardSuit.Heart || game.getTrump().getSuit() == CardSuit.Diamond) {
+			trumpCard.setForeground(Color.RED);
+		}
+		middlePanel.add(trumpCard);
+		return trumpCard;
+	}
+
+	private void drawOpponentArea(List<IsPlayer<PlayingCard36>> opponents, int width, int height, int i) {
+		IsPlayer<PlayingCard36> opponent = opponents.get(i);
+		Panel playerPanel = new Panel();
+		playerPanel.setName(opponent.getId().toString());
+		playerPanel.setBounds(i * width + padding, padding * 3, width - padding, height - 4 * padding);
+		playerPanel.setBackground(Color.CYAN);
+
+		Label opponentName = new Label(opponent.getName());
+		opponentName.setBounds(0, padding * 2, width - 2 * padding, padding * 4);
+		opponentName.setAlignment(Label.CENTER);
+		playerPanel.add(opponentName);
+
+		Button buttonCardsCount = new Button();
+		buttonCardsCount.setBounds(padding, padding * 8, width - 4 * padding, height / 2);
+		buttonCardsCount.setLabel(String.valueOf(opponent.getHandCards().size()));
+		buttonCardsCount.setFont(new Font("Arial", Font.PLAIN, 40));
+		buttonCardsCount.setForeground(Color.GRAY);
+		playerPanel.add(buttonCardsCount);
+
+		topPlayerPanel.add(playerPanel);
 	}
 
 	private void clearBoard() {
