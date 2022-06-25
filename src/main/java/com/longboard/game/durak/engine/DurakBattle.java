@@ -22,12 +22,20 @@ public class DurakBattle {
 	private IsPlayer<PlayingCard36> defender;
 	private CardBattle battlingCards;
 	private CardSuit trump;
+	private DurakBattle previousBattle = null;
 
 	public DurakBattle(IsPlayer<PlayingCard36> attacker, IsPlayer<PlayingCard36> defender, CardSuit trump) {
 		this.attacker = attacker;
 		this.defender = defender;
 		this.battlingCards = new CardBattle();
 		this.trump = trump;
+	}
+	public DurakBattle(IsPlayer<PlayingCard36> attacker, IsPlayer<PlayingCard36> defender, CardSuit trump, DurakBattle previousBattle) {
+		this.attacker = attacker;
+		this.defender = defender;
+		this.battlingCards = new CardBattle();
+		this.trump = trump;
+		this.previousBattle = previousBattle;
 	}
 
 	public List<PlayingCard36> getCardsForAttack() {

@@ -29,6 +29,7 @@ public class DurakGame {
 
 	private List<IsPlayer<PlayingCard36>> activePlayers = new LinkedList<>();
 	private Map<Integer, IsPlayer<PlayingCard36>> playersScore = new HashMap<>();
+	private List<DurakBattle> battles = new LinkedList<>();
 
 	/**
 	 * Defined game data for provided amount of players.
@@ -109,6 +110,21 @@ public class DurakGame {
 
 	public void endGame() {
 
+	}
+
+	public DurakBattle startBattle(DurakBattle previousBattle, IsPlayer<PlayingCard36> attacker) {
+		if (attacker == null) {
+			LogUtils.error("Attacker player can't be null");
+			throw new InitialisationException();
+		}
+		IsPlayer<PlayingCard36> defender = definePlayerToAttack(attacker);
+		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
+		if (previousBattle == null) {
+			//first battle
+			return newBattle;
+		}
+		battles.add(previousBattle);
+		return newBattle;
 	}
 
 	public List<PlayingCard36> getDeck() {
