@@ -7,6 +7,7 @@ import com.longboard.game.durak.engine.DurakGame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -135,13 +136,17 @@ public class DurakGameDisplay extends Frame {
 
 	private void drawDeckWithCounter(int width, int height, Button trumpCard) {
 		if (game.getDeck().size() > 0) {
-			Button deckButton = new Button();
-			deckButton.setBounds(width + padding * 6, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
-			deckButton.setLabel(String.valueOf(game.getDeck().size()));
-			deckButton.setFont(new Font("Arial", Font.PLAIN, 48));
-			deckButton.setBackground(new Color(170, 83, 91));
-			deckButton.setForeground(Color.GREEN);
-			middlePanel.add(deckButton);
+			Panel deckCounter = new Panel();
+			deckCounter.setBounds(width + padding * 6, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
+			Label counter = new Label();
+			counter.setText(String.valueOf(game.getDeck().size()));
+			counter.setFont(new Font("Arial", Font.PLAIN, 48));
+			counter.setAlignment(Label.CENTER);
+			counter.setBounds(padding, 4* padding, width - 4 * padding, 4 * padding);
+			counter.setForeground(new Color(44, 10, 13));
+			deckCounter.add(counter);
+			deckCounter.setBackground(new Color(170, 83, 91));
+			middlePanel.add(deckCounter);
 		} else {
 			trumpCard.setEnabled(false);
 		}
