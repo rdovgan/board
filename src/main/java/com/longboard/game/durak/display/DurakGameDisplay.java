@@ -3,6 +3,7 @@ package com.longboard.game.durak.display;
 import com.longboard.entity.IsPlayer;
 import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
+import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class DurakGameDisplay extends Frame {
 
 	private DurakGame game = new DurakGame();
 	private IsPlayer<PlayingCard36> currentPlayer = null;
+	private DurakBattle currentBattle = null;
 
 	DurakGameDisplay() {
 		super.setSize(totalWidth + 2 * padding, totalHeight + 4 * padding);
@@ -99,6 +101,7 @@ public class DurakGameDisplay extends Frame {
 	private void prepareBoard(int playersCount) {
 		game.initialiseGame(playersCount);
 		currentPlayer = game.getActivePlayers().get(0);
+		currentBattle = game.startBattle(null, game.defineFirstPlayer());
 		refreshBoard();
 	}
 
