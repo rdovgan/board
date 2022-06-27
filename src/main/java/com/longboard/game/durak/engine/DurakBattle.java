@@ -55,13 +55,15 @@ public class DurakBattle {
 		if (cardForAttack == null) {
 			throw new InitialisationException();
 		}
-		if (!Objects.equals(cardForAttack.getOwner().getId(), attacker.getId())) {
+		if (!Objects.equals(cardForAttack.getOwnerId(), attacker.getId())) {
 			throw new GameException("Wrong card parameter. The card " + cardForAttack.getName() + " not belong to attacker");
 		}
 		if (DurakCardEngine.canAttack(cardForAttack,
 				Stream.concat(battlingCards.getBattlingCards().values().stream(), battlingCards.getBattlingCards().keySet().stream())
 						.collect(Collectors.toList()))) {
 			battlingCards.addAttackerCard(cardForAttack);
+			attacker.getHandCards().remove(cardForAttack);
+			cardForAttack.setOwnerId(null);
 		} else {
 			throw new GameException("The card " + cardForAttack.getName() + " can't be played");
 		}
@@ -71,11 +73,13 @@ public class DurakBattle {
 		if (cardToDefend == null) {
 			throw new InitialisationException();
 		}
-		if (!Objects.equals(cardToDefend.getOwner().getId(), defender.getId())) {
+		if (!Objects.equals(cardToDefend.getOwnerId(), defender.getId())) {
 			throw new GameException("Wrong card parameter. The card " + cardToDefend.getName() + " not belong to defender");
 		}
 		if (DurakCardEngine.canBeat(cardToDefend, cardToBeat, trump)) {
 			battlingCards.addDefendingCard(cardToDefend, cardToBeat);
+			defender.getHandCards().remove(cardToDefend);
+			cardToDefend.setOwnerId(null);
 		} else {
 			throw new GameException("The card " + cardToDefend.getName() + " can't be played");
 		}

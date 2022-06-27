@@ -16,6 +16,7 @@ public class PlayingCard36 implements IsCard {
 	private final CardRank rank;
 	private final Long number;
 	private final String name;
+	private UUID ownerId;
 
 	public PlayingCard36(CardSuit suit, CardRank rank) {
 		this.suit = suit;
@@ -80,5 +81,13 @@ public class PlayingCard36 implements IsCard {
 	@Override
 	public Consumer<IsCard> getEffect() {
 		return null;
+	}
+
+	public UUID getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(UUID ownerId) {
+		this.ownerId = ownerId;
 	}
 }

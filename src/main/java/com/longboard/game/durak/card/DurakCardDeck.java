@@ -2,7 +2,6 @@ package com.longboard.game.durak.card;
 
 import com.longboard.engine.LogUtils;
 import com.longboard.entity.IsDeck;
-import com.longboard.exception.GameException;
 import com.longboard.game.durak.engine.DurakCardDeckUtils;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -60,6 +59,6 @@ public class DurakCardDeck implements IsDeck<PlayingCard36> {
 			return drawTrump();
 		}
 		LogUtils.error("There is no cards left");
-		throw new GameException("There is no cards left");
+		return null;
 	}
 }

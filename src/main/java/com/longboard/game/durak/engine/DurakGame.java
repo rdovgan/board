@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class DurakGame {
@@ -122,6 +124,10 @@ public class DurakGame {
 			throw new InitialisationException();
 		}
 		IsPlayer<PlayingCard36> defender = definePlayerToAttack(attacker);
+		if (attacker.getId() == defender.getId()) {
+			endGame();
+			return null;
+		}
 		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
 		//TODO check if currentPlayer is active
 		if (previousBattle == null) {
@@ -152,22 +158,38 @@ public class DurakGame {
 
 	public void endBattle(DurakBattle battle) {
 		if (battle.getAttacker().getId() == battle.defineWinner().getId()) {
-			battle.getDefender().addCardsToHand(battle.defineCardsInBattle());
-			if (deck.isEmpty()) {
-				activePlayers.remove(battle.getAttacker());
-				playersScore.put(playersScore.size() + 1, battle.getAttacker());
+			List<PlayingCard36> cardsToPutInHand = battle.defineCardsInBattle();
+			cardsToPutInHand.forEach(card -> card.setOwnerId(battle.getDefender().getId()));
+			battle.getDefender().addCardsToHand(cardsToPutInHand);
+			if (deck.isEmpty() && CollectionUtils.isEmpty(battle.getAttacker().getHandCards())) {
+				movePlayerToWinnerList(battle.getAttacker());
 			} else {
-				//draw up to 6
+				drawCards(battle.getAttacker());
 			}
 		} else {
 			if (deck.isEmpty()) {
-				activePlayers.remove(battle.getAttacker());
-				playersScore.put(playersScore.size() + 1, battle.getAttacker());
-				//same for defender
+				if (CollectionUtils.isEmpty(battle.getAttacker().getHandCards())) {
+					movePlayerToWinnerList(battle.getAttacker());
+				}
+				if (CollectionUtils.isEmpty(battle.getDefender().getHandCards())) {
+					movePlayerToWinnerList(battle.getDefender());
+				}
 			} else {
-				//draw up to 6
+				drawCards(battle.getAttacker());
+				drawCards(battle.getDefender());
 			}
 		}
+	}
+
+	private void drawCards(IsPlayer<PlayingCard36> player) {
+		List<PlayingCard36> cardsToDraw = IntStream.range(player.getHandCards().size(), CARDS_COUNT_IN_HAND_ON_START).mapToObj(i -> deck.draw())
+				.filter(Objects::nonNull).collect(Collectors.toList());
+		player.addCardsToHand(cardsToDraw);
+	}
+
+	private void movePlayerToWinnerList(IsPlayer<PlayingCard36> player) {
+		activePlayers.remove(player);
+		playersScore.put(playersScore.size() + 1, player);
 	}
 
 }
