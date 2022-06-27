@@ -145,4 +145,24 @@ public class DurakGame {
 		return Collections.unmodifiableList(this.activePlayers);
 	}
 
+	public void endBattle(DurakBattle battle) {
+		if (battle.getAttacker().getId() == battle.defineWinner().getId()) {
+			battle.getDefender().addCardsToHand(battle.defineCardsInBattle());
+			if (deck.isEmpty()) {
+				activePlayers.remove(battle.getAttacker());
+				playersScore.put(playersScore.size() + 1, battle.getAttacker());
+			} else {
+				//draw up to 6
+			}
+		} else {
+			if (deck.isEmpty()) {
+				activePlayers.remove(battle.getAttacker());
+				playersScore.put(playersScore.size() + 1, battle.getAttacker());
+				//same for defender
+			} else {
+				//draw up to 6
+			}
+		}
+	}
+
 }

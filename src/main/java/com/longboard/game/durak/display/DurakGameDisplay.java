@@ -5,10 +5,10 @@ import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +30,7 @@ public class DurakGameDisplay extends Frame {
 	private DurakGame game = new DurakGame();
 	private IsPlayer<PlayingCard36> currentPlayer = null;
 	private DurakBattle currentBattle = null;
+	private boolean isCurrentPlayerTurn = false;
 
 	DurakGameDisplay() {
 		super.setSize(totalWidth + 2 * padding, totalHeight + 4 * padding);
@@ -103,6 +104,17 @@ public class DurakGameDisplay extends Frame {
 		currentPlayer = game.getActivePlayers().get(0);
 		currentBattle = game.startBattle(null, game.defineFirstPlayer());
 		refreshBoard();
+	}
+
+	private void autoBattle(DurakBattle battle) {
+		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
+			//battle
+		}
+		game.endBattle(battle);
+	}
+
+	private void attackCurrentPlayer(DurakBattle battle) {
+
 	}
 
 	private void refreshBoard() {

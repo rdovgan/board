@@ -30,6 +30,7 @@ public class DurakBattle {
 		this.battlingCards = new CardBattle();
 		this.trump = trump;
 	}
+
 	public DurakBattle(IsPlayer<PlayingCard36> attacker, IsPlayer<PlayingCard36> defender, CardSuit trump, DurakBattle previousBattle) {
 		this.attacker = attacker;
 		this.defender = defender;
@@ -86,11 +87,24 @@ public class DurakBattle {
 	 *
 	 * @return a player who won the battle
 	 */
-	public IsPlayer<PlayingCard36> endBattle() {
+	public IsPlayer<PlayingCard36> defineWinner() {
 		if (battlingCards.getBattlingCards().entrySet().stream().anyMatch(entry -> entry.getValue() == null)) {
 			return attacker;
 		}
 		return defender;
+	}
+
+	public IsPlayer<PlayingCard36> getAttacker() {
+		return attacker;
+	}
+
+	public IsPlayer<PlayingCard36> getDefender() {
+		return defender;
+	}
+
+	public List<PlayingCard36> defineCardsInBattle() {
+		return Stream.concat(battlingCards.getBattlingCards().keySet().stream(), battlingCards.getBattlingCards().values().stream()).filter(Objects::nonNull)
+				.collect(Collectors.toList());
 	}
 
 }
