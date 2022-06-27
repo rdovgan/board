@@ -106,11 +106,13 @@ public class DurakGameDisplay extends Frame {
 		refreshBoard();
 	}
 
+	//TODO implement AI for battle
 	private void autoBattle(DurakBattle battle) {
 		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
 			//battle
 		}
 		game.endBattle(battle);
+		currentBattle = game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 	}
 
 	private void attackCurrentPlayer(DurakBattle battle) {

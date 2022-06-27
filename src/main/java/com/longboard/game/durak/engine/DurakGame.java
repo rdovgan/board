@@ -104,8 +104,12 @@ public class DurakGame {
 		return null;
 	}
 
-	public void defineWinner() {
-
+	public IsPlayer<PlayingCard36> defineNextPlayerToAttack(DurakBattle endedBattle) {
+		if (endedBattle.getAttacker().getId() == endedBattle.defineWinner().getId()) {
+			return definePlayerToAttack(endedBattle.getDefender());
+		} else {
+			return endedBattle.getDefender();
+		}
 	}
 
 	public void endGame() {
@@ -119,6 +123,7 @@ public class DurakGame {
 		}
 		IsPlayer<PlayingCard36> defender = definePlayerToAttack(attacker);
 		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
+		//TODO check if currentPlayer is active
 		if (previousBattle == null) {
 			//first battle
 			return newBattle;
