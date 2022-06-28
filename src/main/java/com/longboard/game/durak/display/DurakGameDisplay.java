@@ -161,6 +161,16 @@ public class DurakGameDisplay extends Frame {
 
 	private void refreshBoard() {
 		//auto battle
+		while (currentBattle.getDefender().getId() != currentPlayer.getId() || currentBattle.getAttacker().getId() != currentPlayer.getId()) {
+			autoBattle(currentBattle);
+		}
+
+		if (currentBattle.getDefender().getId() == currentPlayer.getId() && currentBattle.defineCardsInBattle().size() == 0) {
+			cardToBeat = currentBattle.getCardsForAttack().stream().findAny().orElse(null);
+			if (cardToBeat != null) {
+				currentBattle.playCardToAttack(cardToBeat);
+			}
+		}
 
 		List<IsPlayer<PlayingCard36>> opponents = game.getActivePlayers().stream().filter(player -> player.getId() != currentPlayer.getId())
 				.collect(Collectors.toList());

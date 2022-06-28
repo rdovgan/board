@@ -24,6 +24,7 @@ public interface IsCard extends IsTarget {
 
 	Predicate<IsCard> getCondition();
 
+	//TODO change to OwnerID
 	void setOwner(IsPlayer<IsCard> player);
 
 	IsPlayer<IsCard> getOwner();

@@ -25,6 +25,7 @@ public class DurakPlayer implements IsPlayer<PlayingCard36> {
 	public DurakPlayer(String name, PlayerColor color, List<PlayingCard36> cards) {
 		this.name = name;
 		this.color = color;
+		cards.forEach(card -> card.setOwnerId(getId()));
 		this.hand = cards;
 	}
 
