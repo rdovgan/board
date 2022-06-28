@@ -75,10 +75,8 @@ public class DurakGameDisplay extends Frame {
 		middlePanel.add(playerCountBox);
 
 		Button confirmPlayersCountAndStartGame = new Button("Confirm");
-		confirmPlayersCountAndStartGame.setBounds(padding, +padding * 2, padding * 5, padding * 2);
-		confirmPlayersCountAndStartGame.addActionListener(e -> {
-			startGame(playerCountBox.getSelectedItem());
-		});
+		confirmPlayersCountAndStartGame.setBounds(padding, padding * 2, padding * 5, padding * 2);
+		confirmPlayersCountAndStartGame.addActionListener(e -> startGame(playerCountBox.getSelectedItem()));
 		middlePanel.add(confirmPlayersCountAndStartGame);
 
 		middlePanel.setVisible(true);
