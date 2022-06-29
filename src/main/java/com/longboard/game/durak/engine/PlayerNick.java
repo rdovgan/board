@@ -11,7 +11,7 @@ public enum PlayerNick {
 	private static final int SIZE = VALUES.size();
 	private static final Random RANDOM = new Random();
 
-	public static PlayerNick randomNick()  {
+	public static PlayerNick randomNick() {
 		return VALUES.get(RANDOM.nextInt(SIZE));
 	}
 

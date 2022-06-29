@@ -134,34 +134,43 @@ public class DurakGameDisplay extends Frame {
 	}
 
 	private void currentPlayerPlayCard(PlayingCard36 card) {
-		if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
-			currentBattle.playCardToAttack(card);
-			if (CollectionUtils.isEmpty(currentBattle.getCardsForAttack())) {
-				isCurrentPlayerTurn = false;
-				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+		try {
+			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
+				//player attack
+				currentBattle.playCardToAttack(card);
+				//bot defend
+				PlayingCard36 cardToDefend = currentBattle.getCardsForDefend(card).stream().findFirst().orElse(null);
+				if (cardToDefend == null) {
+					isCurrentPlayerTurn = false;
+					game.endBattle(currentBattle);
+					currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+				} else {
+					currentBattle.playCardToDefend(cardToDefend, card);
+				}
 			}
-		}
-		if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
-			currentBattle.playCardToDefend(card, cardToBeat);
-			//attack current player with card
-			cardToBeat = currentBattle.getCardsForAttack().stream().findAny().orElse(null);
-			if (cardToBeat != null) {
-				currentBattle.playCardToAttack(cardToBeat);
-			} else {
-				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
-				isCurrentPlayerTurn = true;
+			if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
+				//player defend
+				currentBattle.playCardToDefend(card, cardToBeat);
+				//bot attack current player with new card
+				cardToBeat = currentBattle.getCardsForAttack().stream().findAny().orElse(null);
+				if (cardToBeat != null) {
+					currentBattle.playCardToAttack(cardToBeat);
+				} else {
+					game.endBattle(currentBattle);
+					currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+					isCurrentPlayerTurn = true;
+				}
 			}
-			//refresh board and wait for current player
-			refreshBoard();
+		} catch (Exception e) {
+			super.setTitle(e.getMessage());
 		}
 		refreshBoard();
 	}
 
 	private void refreshBoard() {
+		clearBoard();
 		//auto battle
-		while (currentBattle.getDefender().getId() != currentPlayer.getId() || currentBattle.getAttacker().getId() != currentPlayer.getId()) {
+		while (currentBattle.getDefender().getId() != currentPlayer.getId() && currentBattle.getAttacker().getId() != currentPlayer.getId()) {
 			autoBattle(currentBattle);
 		}
 
@@ -180,6 +189,10 @@ public class DurakGameDisplay extends Frame {
 		IntStream.range(0, opponents.size()).forEach(i -> displayOpponentArea(opponents, width, height, i));
 
 		Button trumpCard = displayTrumpCard();
+
+		if (cardToBeat != null) {
+			displayCardToBeat(width, height);
+		}
 
 		displayDeckWithCounter(width, height, trumpCard);
 
@@ -202,12 +215,36 @@ public class DurakGameDisplay extends Frame {
 			cardButton.addActionListener(listener -> currentPlayerPlayCard(card));
 			bottomPlayerPanel.add(cardButton);
 		});
+		Button endTurn = new Button();
+		endTurn.setBounds(padding, cardHeight + 5 * padding, cardWidth, 5 * padding);
+		endTurn.setLabel("End turn");
+		endTurn.addActionListener(listener -> endCurrentTurn());
+		bottomPlayerPanel.add(endTurn);
+	}
+
+	private void endCurrentTurn() {
+		try {
+			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
+				isCurrentPlayerTurn = false;
+				game.endBattle(currentBattle);
+				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+			}
+			if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
+				game.endBattle(currentBattle);
+				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+				isCurrentPlayerTurn = true;
+
+			}
+		} catch (Exception e) {
+			super.setTitle(e.getMessage());
+		}
+		refreshBoard();
 	}
 
 	private void displayDeckWithCounter(int width, int height, Button trumpCard) {
 		if (game.getDeck().size() > 0) {
 			Panel deckCounter = new Panel();
-			deckCounter.setBounds(width + padding * 6, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
+			deckCounter.setBounds(width + padding * 3, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
 			Label counter = new Label();
 			counter.setText(String.valueOf(game.getDeck().size()));
 			counter.setFont(new Font("Arial", Font.PLAIN, 48));
@@ -232,6 +269,17 @@ public class DurakGameDisplay extends Frame {
 		}
 		middlePanel.add(trumpCard);
 		return trumpCard;
+	}
+
+	private void displayCardToBeat(int width, int height) {
+		Button cardToBeatButton = new Button();
+		cardToBeatButton.setBounds(2 * width + padding * 6, padding * 4, cardWidth, cardHeight);
+		cardToBeatButton.setLabel(cardToBeat.getName());
+		cardToBeatButton.setFont(new Font("Arial", Font.PLAIN, 38));
+		if (cardToBeat.getSuit() == CardSuit.Heart || cardToBeat.getSuit() == CardSuit.Diamond) {
+			cardToBeatButton.setForeground(Color.RED);
+		}
+		middlePanel.add(cardToBeatButton);
 	}
 
 	private void displayOpponentArea(List<IsPlayer<PlayingCard36>> opponents, int width, int height, int i) {

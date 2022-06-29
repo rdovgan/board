@@ -49,7 +49,6 @@ public class DurakGame {
 		for (int currentPlayer = 0; currentPlayer < playersCount; currentPlayer++) {
 			List<PlayingCard36> playerHand = new ArrayList<>();
 			IntStream.range(0, CARDS_COUNT_IN_HAND_ON_START).forEach(i -> playerHand.add(deck.draw()));
-			//TODO add nicks
 			DurakPlayer player = new DurakPlayer(PlayerNick.randomNick().name(), PlayerColor.Green, playerHand);
 			player.validate();
 			this.activePlayers.add(player);
@@ -185,6 +184,9 @@ public class DurakGame {
 	private void drawCards(IsPlayer<PlayingCard36> player) {
 		List<PlayingCard36> cardsToDraw = IntStream.range(player.getHandCards().size(), CARDS_COUNT_IN_HAND_ON_START).mapToObj(i -> deck.draw())
 				.filter(Objects::nonNull).collect(Collectors.toList());
+		if (CollectionUtils.isEmpty(cardsToDraw)) {
+			return;
+		}
 		player.addCardsToHand(cardsToDraw);
 	}
 
