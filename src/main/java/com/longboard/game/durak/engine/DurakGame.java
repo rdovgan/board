@@ -187,6 +187,7 @@ public class DurakGame {
 		if (CollectionUtils.isEmpty(cardsToDraw)) {
 			return;
 		}
+		cardsToDraw.forEach(card -> card.setOwnerId(player.getId()));
 		player.addCardsToHand(cardsToDraw);
 	}
 

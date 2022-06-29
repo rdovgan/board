@@ -228,12 +228,10 @@ public class DurakGameDisplay extends Frame {
 				isCurrentPlayerTurn = false;
 				game.endBattle(currentBattle);
 				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
-			}
-			if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
+			} else if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
 				game.endBattle(currentBattle);
 				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 				isCurrentPlayerTurn = true;
-
 			}
 		} catch (Exception e) {
 			super.setTitle(e.getMessage());

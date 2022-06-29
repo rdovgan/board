@@ -9,7 +9,6 @@ import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -40,7 +39,8 @@ public class DurakBattle {
 	}
 
 	public List<PlayingCard36> getCardsForAttack() {
-		Set<CardRank> battlingCardsRank = new HashSet<>();
+		Set<CardRank> battlingCardsRank = Stream.concat(battlingCards.getBattlingCards().values().stream().map(PlayingCard36::getRank),
+				battlingCards.getBattlingCards().keySet().stream().map(PlayingCard36::getRank)).collect(Collectors.toSet());
 		if (CollectionUtils.isEmpty(battlingCardsRank)) {
 			return attacker.getHandCards();
 		}
