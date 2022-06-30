@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 public class DurakGameDisplay extends Frame {
 
 	public int padding = 10;
-	public int totalWidth = 800;
+	public int totalWidth = 1600;
 	public int totalHeight = 800;
 
 	private int cardWidth = 57 * 3 / 2;
@@ -185,7 +185,7 @@ public class DurakGameDisplay extends Frame {
 
 		List<IsPlayer<PlayingCard36>> opponents = game.getActivePlayers().stream().filter(player -> player.getId() != currentPlayer.getId())
 				.collect(Collectors.toList());
-		int width = topPlayerPanel.getWidth() / 5;
+		int width = padding * 20;
 		int height = topPlayerPanel.getHeight();
 		//Draw opponents area on top panel
 		IntStream.range(0, opponents.size()).forEach(i -> displayOpponentArea(opponents, width, height, i));
@@ -193,12 +193,12 @@ public class DurakGameDisplay extends Frame {
 		Button trumpCard = displayTrumpCard();
 
 		if (cardToBeat != null) {
-			displayCardToBeat(width, height);
+			displayCardToBeat();
 		}
 
-		displayBattlingCards(width);
+		displayBattlingCards();
 
-		displayDeckWithCounter(width, height, trumpCard);
+		displayDeckWithCounter(trumpCard);
 
 		displayPlayersHand();
 	}
@@ -263,7 +263,7 @@ public class DurakGameDisplay extends Frame {
 
 	private Button displayTrumpCard() {
 		Button trumpCard = new Button();
-		trumpCard.setBounds(padding * 8, padding * 4, cardWidth, cardHeight);
+		trumpCard.setBounds(padding * 2, padding * 4, cardWidth, cardHeight);
 		trumpCard.setLabel(game.getTrump().getName());
 		trumpCard.setFont(new Font("Arial", Font.PLAIN, 38));
 		if (game.getTrump().getSuit() == CardSuit.Heart || game.getTrump().getSuit() == CardSuit.Diamond) {
@@ -273,9 +273,9 @@ public class DurakGameDisplay extends Frame {
 		return trumpCard;
 	}
 
-	private void displayCardToBeat(int width, int height) {
+	private void displayCardToBeat() {
 		Button cardToBeatButton = new Button();
-		cardToBeatButton.setBounds(2 * width + padding * 6, padding * 4, cardWidth, cardHeight);
+		cardToBeatButton.setBounds(3 * cardWidth + padding * 6, padding * 4, cardWidth, cardHeight);
 		cardToBeatButton.setLabel(cardToBeat.getName());
 		cardToBeatButton.setFont(new Font("Arial", Font.PLAIN, 38));
 		if (cardToBeat.getSuit() == CardSuit.Heart || cardToBeat.getSuit() == CardSuit.Diamond) {
@@ -284,16 +284,17 @@ public class DurakGameDisplay extends Frame {
 		middlePanel.add(cardToBeatButton);
 	}
 
-	private void displayBattlingCards(int width) {
+	private void displayBattlingCards() {
 		if (currentBattle == null || currentBattle.getBattlingCards() == null || MapUtils.isEmpty(currentBattle.getBattlingCards().getBattlingCards())) {
 			return;
 		}
+		int width = cardWidth + 4 * padding;
 		int position = 0;
 		for (Map.Entry<PlayingCard36, PlayingCard36> cardPair : currentBattle.getBattlingCards().getBattlingCards().entrySet()) {
 			if (cardPair.getValue() != null) {
 				PlayingCard36 firstCardToBeat = cardPair.getKey();
 				Button firstCardToBeatButton = new Button();
-				firstCardToBeatButton.setBounds(3 * width + cardWidth + (cardWidth/2 + padding) * position, padding * 4, cardWidth / 2, cardHeight / 2);
+				firstCardToBeatButton.setBounds(3 * width + cardWidth + (cardWidth / 2 + padding) * position, padding * 4, cardWidth / 2, cardHeight / 2);
 				firstCardToBeatButton.setLabel(firstCardToBeat.getName());
 				firstCardToBeatButton.setFont(new Font("Arial", Font.PLAIN, 18));
 				if (firstCardToBeat.getSuit() == CardSuit.Heart || firstCardToBeat.getSuit() == CardSuit.Diamond) {
@@ -303,7 +304,7 @@ public class DurakGameDisplay extends Frame {
 
 				PlayingCard36 secondCardToDefend = cardPair.getValue();
 				Button secondCardToDefendButton = new Button();
-				secondCardToDefendButton.setBounds(3 * width + cardWidth + (cardWidth/2 + padding) * position, padding * 5 + cardHeight / 2, cardWidth / 2,
+				secondCardToDefendButton.setBounds(3 * width + cardWidth + (cardWidth / 2 + padding) * position, padding * 5 + cardHeight / 2, cardWidth / 2,
 						cardHeight / 2);
 				secondCardToDefendButton.setLabel(secondCardToDefend.getName());
 				secondCardToDefendButton.setFont(new Font("Arial", Font.PLAIN, 18));
