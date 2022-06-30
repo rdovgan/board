@@ -111,4 +111,7 @@ public class DurakBattle {
 				.collect(Collectors.toList());
 	}
 
+	public CardBattle getBattlingCards() {
+		return battlingCards;
+	}
 }

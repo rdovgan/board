@@ -6,11 +6,13 @@ import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -194,6 +196,8 @@ public class DurakGameDisplay extends Frame {
 			displayCardToBeat(width, height);
 		}
 
+		displayBattlingCards(width);
+
 		displayDeckWithCounter(width, height, trumpCard);
 
 		displayPlayersHand();
@@ -278,6 +282,39 @@ public class DurakGameDisplay extends Frame {
 			cardToBeatButton.setForeground(Color.RED);
 		}
 		middlePanel.add(cardToBeatButton);
+	}
+
+	private void displayBattlingCards(int width) {
+		if (currentBattle == null || currentBattle.getBattlingCards() == null || MapUtils.isEmpty(currentBattle.getBattlingCards().getBattlingCards())) {
+			return;
+		}
+		int position = 0;
+		for (Map.Entry<PlayingCard36, PlayingCard36> cardPair : currentBattle.getBattlingCards().getBattlingCards().entrySet()) {
+			if (cardPair.getValue() != null) {
+				PlayingCard36 firstCardToBeat = cardPair.getKey();
+				Button firstCardToBeatButton = new Button();
+				firstCardToBeatButton.setBounds(3 * width + cardWidth + (cardWidth/2 + padding) * position, padding * 4, cardWidth / 2, cardHeight / 2);
+				firstCardToBeatButton.setLabel(firstCardToBeat.getName());
+				firstCardToBeatButton.setFont(new Font("Arial", Font.PLAIN, 18));
+				if (firstCardToBeat.getSuit() == CardSuit.Heart || firstCardToBeat.getSuit() == CardSuit.Diamond) {
+					firstCardToBeatButton.setForeground(Color.RED);
+				}
+				middlePanel.add(firstCardToBeatButton);
+
+				PlayingCard36 secondCardToDefend = cardPair.getValue();
+				Button secondCardToDefendButton = new Button();
+				secondCardToDefendButton.setBounds(3 * width + cardWidth + (cardWidth/2 + padding) * position, padding * 5 + cardHeight / 2, cardWidth / 2,
+						cardHeight / 2);
+				secondCardToDefendButton.setLabel(secondCardToDefend.getName());
+				secondCardToDefendButton.setFont(new Font("Arial", Font.PLAIN, 18));
+				if (secondCardToDefend.getSuit() == CardSuit.Heart || secondCardToDefend.getSuit() == CardSuit.Diamond) {
+					secondCardToDefendButton.setForeground(Color.RED);
+				}
+				middlePanel.add(secondCardToDefendButton);
+
+				position++;
+			}
+		}
 	}
 
 	private void displayOpponentArea(List<IsPlayer<PlayingCard36>> opponents, int width, int height, int i) {
