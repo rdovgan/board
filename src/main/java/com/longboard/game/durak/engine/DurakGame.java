@@ -144,6 +144,13 @@ public class DurakGame {
 		return Collections.unmodifiableList(this.deck.getCards());
 	}
 
+	public List<PlayingCard36> getDiscard() {
+		if (this.battles == null) {
+			return new LinkedList<>();
+		}
+		return this.battles.stream().map(DurakBattle::defineCardsInBattle).flatMap(List::stream).collect(Collectors.toUnmodifiableList());
+	}
+
 	public PlayingCard36 getTrump() {
 		return this.trump;
 	}
