@@ -117,8 +117,8 @@ public class DurakGame {
 		}
 	}
 
-	public void endGame() {
-
+	public Map<Integer, IsPlayer<PlayingCard36>> endGame() {
+		return playersScore;
 	}
 
 	public DurakBattle startBattle(DurakBattle previousBattle, IsPlayer<PlayingCard36> attacker) {
