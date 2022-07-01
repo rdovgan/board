@@ -122,12 +122,8 @@ public class DurakGame {
 	}
 
 	public DurakBattle startBattle(DurakBattle previousBattle, IsPlayer<PlayingCard36> attacker) {
-		if (attacker == null) {
-			LogUtils.error("Attacker player can't be null");
-			throw new InitialisationException();
-		}
 		IsPlayer<PlayingCard36> defender = definePlayerToAttack(attacker);
-		if (attacker.getId() == defender.getId()) {
+		if (attacker == null || defender == null || attacker.getId() == defender.getId()) {
 			endGame();
 			return null;
 		}
