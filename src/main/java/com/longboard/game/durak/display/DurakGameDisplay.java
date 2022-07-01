@@ -201,6 +201,23 @@ public class DurakGameDisplay extends Frame {
 		displayDeckWithCounter(trumpCard);
 
 		displayPlayersHand();
+
+		if (currentBattle == null && MapUtils.isNotEmpty(game.endGame())) {
+			middlePanel.removeAll();
+
+			Panel playersScore = new Panel();
+			playersScore.setBounds(cardWidth + padding * 2, padding * 2, cardWidth * 2, cardHeight + 2 * padding);
+			Label playersScoreLabel = new Label();
+			playersScoreLabel.setText(
+					game.endGame().entrySet().stream().map(entry -> entry.getKey() + ". " + entry.getValue().getName()).collect(Collectors.joining("\n")));
+			playersScoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+			playersScoreLabel.setBounds(padding, padding, cardWidth * 2, cardHeight + 2 * padding);
+			playersScoreLabel.setForeground(new Color(3, 33, 51));
+			playersScore.add(playersScoreLabel);
+			playersScore.setBackground(new Color(22, 93, 105));
+
+			middlePanel.add(playersScore);
+		}
 	}
 
 	private void displayPlayersHand() {
