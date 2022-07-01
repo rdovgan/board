@@ -50,6 +50,9 @@ public class DurakGame {
 			List<PlayingCard36> playerHand = new ArrayList<>();
 			IntStream.range(0, CARDS_COUNT_IN_HAND_ON_START).forEach(i -> playerHand.add(deck.draw()));
 			DurakPlayer player = new DurakPlayer(PlayerNick.randomNick().name(), PlayerColor.Green, playerHand);
+			if (currentPlayer == 0) {
+				player.setName("Player");
+			}
 			player.validate();
 			this.activePlayers.add(player);
 		}
