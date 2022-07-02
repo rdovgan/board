@@ -58,7 +58,7 @@ public class DurakCardDeck implements IsDeck<PlayingCard36> {
 		if (getTrump() != null) {
 			return drawTrump();
 		}
-		LogUtils.error("There is no cards left");
+		LogUtils.info("There is no cards left");
 		return null;
 	}
 }
