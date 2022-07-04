@@ -257,16 +257,18 @@ public class DurakGameDisplay extends Frame {
 
 	private void displayDeckWithCounter(Button trumpCard) {
 		if (game.getDeck().size() > 0) {
+
 			Panel deckCounter = new Panel();
-			deckCounter.setBounds(width + padding * 3, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
-			Label counter = new Label();
-			counter.setText(String.valueOf(game.getDeck().size()));
-			counter.setFont(new Font("Arial", Font.PLAIN, 48));
-			counter.setAlignment(Label.CENTER);
-			counter.setBounds(padding, 4 * padding, width - 4 * padding, 4 * padding);
-			counter.setForeground(new Color(44, 10, 13));
-			deckCounter.add(counter);
-			deckCounter.setBackground(new Color(170, 83, 91));
+			deckCounter.setBounds(cardWidth * 3 / 2 + padding * 3, padding * 2, cardWidth * 3 / 2 - 2 * padding, cardHeight / 2 + padding);
+			Label counterLabel = new Label();
+			counterLabel.setText(String.valueOf(game.getDeck().size()));
+			counterLabel.setFont(new Font("Arial", Font.PLAIN, 48));
+			counterLabel.setAlignment(Label.CENTER);
+			counterLabel.setBounds(padding, 2 * padding, cardWidth, 4 * padding);
+			counterLabel.setForeground(new Color(10, 51, 3));
+			deckCounter.add(counterLabel);
+			deckCounter.setBackground(new Color(76, 105, 22));
+
 			middlePanel.add(deckCounter);
 
 			Panel discardCounter = new Panel();
