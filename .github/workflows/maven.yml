@@ -25,4 +25,6 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Send Report to Codacy
+        env:
+          CODACY_PROJECT_TOKEN: "d90e9f42004740c6b76dd17079157400"
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
