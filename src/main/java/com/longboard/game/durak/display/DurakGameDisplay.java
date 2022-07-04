@@ -32,7 +32,6 @@ public class DurakGameDisplay extends Frame {
 	private DurakGame game = new DurakGame();
 	private IsPlayer<PlayingCard36> currentPlayer = null;
 	private DurakBattle currentBattle = null;
-	private boolean isCurrentPlayerTurn = false;
 	private PlayingCard36 cardToBeat = null;
 
 	DurakGameDisplay() {
@@ -104,9 +103,7 @@ public class DurakGameDisplay extends Frame {
 		game.initialiseGame(playersCount);
 		currentPlayer = game.getActivePlayers().get(0);
 		currentBattle = game.startBattle(null, game.defineFirstPlayer());
-		if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
-			isCurrentPlayerTurn = true;
-		} else if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
+		if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
 			//attack current player with card
 			cardToBeat = currentBattle.getCardsForAttack().stream().findAny().orElse(null);
 			if (cardToBeat != null) {
@@ -143,7 +140,6 @@ public class DurakGameDisplay extends Frame {
 				//bot defend
 				PlayingCard36 cardToDefend = currentBattle.getCardsForDefend(card).stream().findFirst().orElse(null);
 				if (cardToDefend == null) {
-					isCurrentPlayerTurn = false;
 					game.endBattle(currentBattle);
 					currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 				} else {
@@ -160,7 +156,6 @@ public class DurakGameDisplay extends Frame {
 				} else {
 					game.endBattle(currentBattle);
 					currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
-					isCurrentPlayerTurn = true;
 				}
 			}
 		} catch (Exception e) {
@@ -244,15 +239,13 @@ public class DurakGameDisplay extends Frame {
 	}
 
 	private void endCurrentTurn() {
-		try {
+		try {//TODO here define winner
 			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
-				isCurrentPlayerTurn = false;
 				game.endBattle(currentBattle);
 				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 			} else if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
 				game.endBattle(currentBattle);
 				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
-				isCurrentPlayerTurn = true;
 			}
 		} catch (Exception e) {
 			super.setTitle(e.getMessage());
