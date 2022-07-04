@@ -24,3 +24,5 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+      - name: Send Report to Codacy
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
