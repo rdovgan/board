@@ -188,6 +188,9 @@ public class DurakGame {
 	}
 
 	private void drawCards(IsPlayer<PlayingCard36> player) {
+		if (deck.isEmpty() && deck.getTrump() == null) {
+			return;
+		}
 		List<PlayingCard36> cardsToDraw = IntStream.range(player.getHandCards().size(), CARDS_COUNT_IN_HAND_ON_START).mapToObj(i -> deck.draw())
 				.filter(Objects::nonNull).collect(Collectors.toList());
 		if (CollectionUtils.isEmpty(cardsToDraw)) {
