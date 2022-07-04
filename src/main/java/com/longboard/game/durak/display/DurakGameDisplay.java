@@ -146,12 +146,12 @@ public class DurakGameDisplay extends Frame {
 					currentBattle.playCardToDefend(cardToDefend, card);
 				}
 			}
-			if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
+			if (currentBattle != null && currentBattle.getDefender().getId() == currentPlayer.getId()) {
 				//player defend
 				currentBattle.playCardToDefend(card, cardToBeat);
 				//bot attack current player with new card
 				cardToBeat = currentBattle.getCardsForAttack().stream().findAny().orElse(null);
-				if (cardToBeat != null) {
+				if (cardToBeat != null && currentBattle.getBattlingCards().getBattlingCards().size() < DurakGame.CARDS_COUNT_IN_HAND_ON_START) {
 					currentBattle.playCardToAttack(cardToBeat);
 				} else {
 					game.endBattle(currentBattle);
@@ -167,11 +167,13 @@ public class DurakGameDisplay extends Frame {
 	private void refreshBoard() {
 		clearBoard();
 		//auto battle
-		while (currentBattle.getDefender().getId() != currentPlayer.getId() && currentBattle.getAttacker().getId() != currentPlayer.getId()) {
-			autoBattle(currentBattle);
+		if (currentBattle != null) {
+			while (currentBattle.getDefender().getId() != currentPlayer.getId() && currentBattle.getAttacker().getId() != currentPlayer.getId()) {
+				autoBattle(currentBattle);
+			}
 		}
 
-		if (currentBattle.getDefender().getId() == currentPlayer.getId() && currentBattle.defineCardsInBattle().size() == 0) {
+		if (currentBattle != null && currentBattle.getDefender().getId() == currentPlayer.getId() && currentBattle.defineCardsInBattle().size() == 0) {
 			cardToBeat = currentBattle.getCardsForAttack().stream().findAny().orElse(null);
 			if (cardToBeat != null) {
 				currentBattle.playCardToAttack(cardToBeat);
@@ -253,7 +255,7 @@ public class DurakGameDisplay extends Frame {
 		refreshBoard();
 	}
 
-	private void displayDeckWithCounter(int width, int height, Button trumpCard) {
+	private void displayDeckWithCounter(Button trumpCard) {
 		if (game.getDeck().size() > 0) {
 			Panel deckCounter = new Panel();
 			deckCounter.setBounds(width + padding * 3, padding * 6, width - 2 * padding, height / 2 - 4 * padding);
