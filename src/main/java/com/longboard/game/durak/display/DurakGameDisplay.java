@@ -266,6 +266,19 @@ public class DurakGameDisplay extends Frame {
 			deckCounter.add(counter);
 			deckCounter.setBackground(new Color(170, 83, 91));
 			middlePanel.add(deckCounter);
+
+			Panel discardCounter = new Panel();
+			discardCounter.setBounds(cardWidth * 3 / 2 + padding * 3, cardHeight / 2 + 3 * padding, cardWidth * 3 / 2 - 2 * padding, cardHeight / 2 + padding);
+			Label discardCounterLabel = new Label();
+			discardCounterLabel.setText(String.valueOf(game.getDiscard().size()));
+			discardCounterLabel.setFont(new Font("Arial", Font.PLAIN, 48));
+			discardCounterLabel.setAlignment(Label.CENTER);
+			discardCounterLabel.setBounds(padding, 2 * padding, cardWidth, 4 * padding);
+			discardCounterLabel.setForeground(new Color(44, 10, 13));
+			discardCounter.add(discardCounterLabel);
+			discardCounter.setBackground(new Color(170, 83, 91));
+
+			middlePanel.add(discardCounter);
 		} else {
 			trumpCard.setEnabled(false);
 		}
