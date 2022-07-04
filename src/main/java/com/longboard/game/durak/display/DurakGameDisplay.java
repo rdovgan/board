@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 public class DurakGameDisplay extends Frame {
 
 	public int padding = 10;
-	public int totalWidth = 1600;
+	public int totalWidth = 1200;
 	public int totalHeight = 800;
 
 	private int cardWidth = 57 * 3 / 2;
