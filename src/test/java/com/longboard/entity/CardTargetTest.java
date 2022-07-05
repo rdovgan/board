@@ -11,17 +11,19 @@ import java.util.function.Predicate;
 
 public class CardTargetTest extends CardTest implements IsCardTarget {
 
+	private IsTarget target = null;
+
 	public CardTargetTest(Long number, String name, String description, CardType cardType, IsCost cost, Predicate<IsCard> condition, Consumer<IsCard> effect) {
 		super(number, name, description, cardType, cost, condition, effect);
 	}
 
 	@Override
 	public TargetType getTargetType() {
-		return super.getTargetType();
+		return TargetType.Card;
 	}
 
 	@Override
 	public void setTarget(IsTarget target) {
-
+		this.target = target;
 	}
 }
