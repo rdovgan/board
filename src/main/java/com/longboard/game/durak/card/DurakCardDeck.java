@@ -61,4 +61,12 @@ public class DurakCardDeck implements IsDeck<PlayingCard36> {
 		LogUtils.info("There is no cards left");
 		return null;
 	}
+
+	public List<PlayingCard36> getDiscard() {
+		return discard;
+	}
+
+	public void setDiscard(List<PlayingCard36> discard) {
+		this.discard = discard;
+	}
 }

@@ -31,14 +31,14 @@ public class SimpleTest {
 
 	private List<IsCard> initHand() {
 		List<IsCard> hand = new ArrayList<>();
-		hand.add(TestResourcesPool.HEALING_SPELL);
+		hand.add(TestResourcesPoolConstants.HEALING_SPELL);
 		return hand;
 	}
 
 	private List<CardTest> initDeck() {
 		List<CardTest> deck = new ArrayList<>();
-		deck.add(TestResourcesPool.HARD_MINING);
-		deck.add(TestResourcesPool.IRON_SWORD_CARD);
+		deck.add(TestResourcesPoolConstants.HARD_MINING);
+		deck.add(TestResourcesPoolConstants.IRON_SWORD_CARD);
 		return deck;
 	}
 
@@ -81,8 +81,8 @@ public class SimpleTest {
 
 	@Test
 	public void takeDamageAndPlayHealSpell() {
-		IsCard healSpell = redPlayer.getHandCards().stream().filter(card -> TestResourcesPool.HEALING_SPELL.getName().equals(card.getName())).findFirst()
-				.orElseThrow();
+		IsCard healSpell = redPlayer.getHandCards().stream().filter(card -> TestResourcesPoolConstants.HEALING_SPELL.getName().equals(card.getName()))
+				.findFirst().orElseThrow();
 		Assertions.assertNotNull(healSpell);
 		Assertions.assertTrue(redPlayer.getHandCards().contains(healSpell));
 		healSpell.play();

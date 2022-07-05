@@ -4,7 +4,7 @@ import com.longboard.entity.card.IsCard;
 
 import java.util.function.Predicate;
 
-public class CardCondition {
+public class CardConditionHelper {
 
 	public static Predicate<IsCard> whenDamaged() {
 		return card -> card.getOwner().getCurrentHealth() < card.getOwner().getMaxHealth();

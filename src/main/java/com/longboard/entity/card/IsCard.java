@@ -3,7 +3,7 @@ package com.longboard.entity.card;
 import com.longboard.base.CardType;
 import com.longboard.base.TargetType;
 import com.longboard.engine.LogUtils;
-import com.longboard.engine.card.AfterPlay;
+import com.longboard.engine.card.AfterPlayHelper;
 import com.longboard.entity.IsPlayer;
 import com.longboard.entity.IsTarget;
 
@@ -36,7 +36,7 @@ public interface IsCard extends IsTarget {
 	default void play() {
 		if (getCondition().test(this)) {
 			getEffect().accept(this);
-			AfterPlay.processCardAfterPlay(this);
+			AfterPlayHelper.processCardAfterPlay(this);
 		} else {
 			LogUtils.info("Can't play card");
 		}
@@ -49,8 +49,8 @@ public interface IsCard extends IsTarget {
 		return TargetType.Card;
 	}
 
-	default AfterPlay.AfterPlayType getAfterPlayType() {
-		return AfterPlay.AfterPlayType.Discard;
+	default AfterPlayHelper.AfterPlayType getAfterPlayType() {
+		return AfterPlayHelper.AfterPlayType.Discard;
 	}
 
 }
