@@ -17,17 +17,18 @@ import java.util.stream.Stream;
 
 public class DurakBattle {
 
-	private IsPlayer<PlayingCard36> attacker;
-	private IsPlayer<PlayingCard36> defender;
-	private CardBattle battlingCards;
-	private CardSuit trump;
-	private DurakBattle previousBattle = null;
+	private final IsPlayer<PlayingCard36> attacker;
+	private final IsPlayer<PlayingCard36> defender;
+	private final CardBattle battlingCards;
+	private final CardSuit trump;
+	private final DurakBattle previousBattle;
 
 	public DurakBattle(IsPlayer<PlayingCard36> attacker, IsPlayer<PlayingCard36> defender, CardSuit trump) {
 		this.attacker = attacker;
 		this.defender = defender;
 		this.battlingCards = new CardBattle();
 		this.trump = trump;
+		this.previousBattle = null;
 	}
 
 	public DurakBattle(IsPlayer<PlayingCard36> attacker, IsPlayer<PlayingCard36> defender, CardSuit trump, DurakBattle previousBattle) {
@@ -113,5 +114,9 @@ public class DurakBattle {
 
 	public CardBattle getBattlingCards() {
 		return battlingCards;
+	}
+
+	public DurakBattle getPreviousBattle() {
+		return previousBattle;
 	}
 }
