@@ -49,7 +49,7 @@ public class DurakBattle {
 	}
 
 	public List<PlayingCard36> getCardsForDefend(PlayingCard36 attackCard) {
-		return defender.getHandCards().stream().filter(card -> DurakCardService.canBeat(card, attackCard, trump)).collect(Collectors.toList());
+		return defender.getHandCards().stream().filter(card -> DurakCardUtils.canBeat(card, attackCard, trump)).collect(Collectors.toList());
 	}
 
 	public void playCardToAttack(PlayingCard36 cardForAttack) {
@@ -59,7 +59,7 @@ public class DurakBattle {
 		if (!Objects.equals(cardForAttack.getOwnerId(), attacker.getId())) {
 			throw new GameException("Wrong card parameter. The card " + cardForAttack.getName() + " not belong to attacker");
 		}
-		if (DurakCardService.canAttack(cardForAttack,
+		if (DurakCardUtils.canAttack(cardForAttack,
 				Stream.concat(battlingCards.getBattlingCards().values().stream(), battlingCards.getBattlingCards().keySet().stream())
 						.collect(Collectors.toList()))) {
 			battlingCards.addAttackerCard(cardForAttack);
@@ -77,7 +77,7 @@ public class DurakBattle {
 		if (!Objects.equals(cardToDefend.getOwnerId(), defender.getId())) {
 			throw new GameException("Wrong card parameter. The card " + cardToDefend.getName() + " not belong to defender");
 		}
-		if (DurakCardService.canBeat(cardToDefend, cardToBeat, trump)) {
+		if (DurakCardUtils.canBeat(cardToDefend, cardToBeat, trump)) {
 			battlingCards.addDefendingCard(cardToBeat, cardToDefend);
 			defender.getHandCards().remove(cardToDefend);
 			cardToDefend.setOwnerId(null);

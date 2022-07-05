@@ -22,6 +22,10 @@ public class CardTargetTest extends CardTest implements IsCardTarget {
 		return TargetType.Card;
 	}
 
+	public IsTarget getTarget() {
+		return target;
+	}
+
 	@Override
 	public void setTarget(IsTarget target) {
 		this.target = target;

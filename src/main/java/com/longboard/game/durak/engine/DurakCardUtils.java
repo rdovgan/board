@@ -8,7 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DurakCardService {
+public class DurakCardUtils {
 
 	public static boolean canBeat(PlayingCard36 cardToPlay, PlayingCard36 attacker, CardSuit trump) {
 		if (attacker == null || cardToPlay == null) {
