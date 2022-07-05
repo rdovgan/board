@@ -2,12 +2,9 @@ package com.longboard.entity;
 
 import com.longboard.entity.card.IsCondition;
 
-public class ConditionTest<IsCard> implements IsCondition<IsCard> {
-
-	private boolean isResourcesAvailable;
+public class ConditionTest<C> implements IsCondition<C> {
 
 	public boolean isPlayerActive() {
-
 		return true;
 	}
 

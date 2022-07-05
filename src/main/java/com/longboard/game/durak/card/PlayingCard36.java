@@ -70,7 +70,7 @@ public class PlayingCard36 implements IsCard {
 
 	@Override
 	public void setOwner(IsPlayer<IsCard> player) {
-
+		this.ownerId = player.getId();
 	}
 
 	@Override

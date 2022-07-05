@@ -8,7 +8,7 @@ import com.longboard.entity.item.IsItem;
 
 import java.util.function.Consumer;
 
-public class CardEffects {
+public class CardEffectsHelper {
 
 	public static Consumer<IsCard> healPlayer(int valueToHeal) {
 		return card -> {
