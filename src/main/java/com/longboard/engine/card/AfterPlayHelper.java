@@ -4,7 +4,7 @@ import com.longboard.entity.card.IsCard;
 
 import java.util.Collections;
 
-public class AfterPlay {
+public class AfterPlayHelper {
 
 	public enum AfterPlayType {
 		Discard, ToTable, ToHand, Burn
@@ -24,6 +24,9 @@ public class AfterPlay {
 			break;
 		case Burn:
 			card.setOwner(null);
+			break;
+		default:
+			break;
 		}
 	}
 
