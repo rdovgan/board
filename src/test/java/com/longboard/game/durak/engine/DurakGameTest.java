@@ -3,11 +3,15 @@ package com.longboard.game.durak.engine;
 import com.longboard.entity.IsPlayer;
 import com.longboard.exception.InitialisationException;
 import com.longboard.game.durak.card.CardRank;
+import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -106,18 +110,65 @@ class DurakGameTest {
 
 	@Test
 	void startBattle() {
+		int playersCount = 3;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		DurakBattle battle = game.startBattle(null, game.defineFirstPlayer());
+		Assertions.assertNotNull(battle);
+		battle = game.startBattle(battle, game.defineNextPlayerToAttack(battle));
+		Assertions.assertNotNull(battle);
 	}
 
 	@Test
 	void getDeck() {
+		int playersCount = 2;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		Assertions.assertTrue(CollectionUtils.isNotEmpty(game.getDeck()));
+		Assertions.assertEquals(DurakGame.MAX_CARDS_COUNT - playersCount * DurakGame.CARDS_COUNT_IN_HAND_ON_START - 1, game.getDeck().size());
 	}
 
 	@Test
 	void getDiscard() {
+		int playersCount = 2;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		Assertions.assertTrue(CollectionUtils.isEmpty(game.getDiscard()));
+		DurakBattle battle = game.startBattle(null, game.defineFirstPlayer());
+		PlayingCard36 attackCard = battle.getCardsForAttack().stream().findFirst().orElse(null);
+		battle.playCardToAttack(attackCard);
+		game.endBattle(battle);
+		Assertions.assertTrue(CollectionUtils.isNotEmpty(game.getDiscard()));
+		Assertions.assertEquals(1, game.getDiscard().size());
 	}
 
 	@Test
 	void getTrump() {
+		int playersCount = 5;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		PlayingCard36 cardTrump = game.getTrump();
+		Assertions.assertNotNull(cardTrump);
+		int cardsCountNeedToDraw = 6;
+		DurakBattle battle = null;
+		while (cardsCountNeedToDraw > 1) {
+			battle = game.startBattle(battle, game.defineFirstPlayer());
+			while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
+				battle.playCardToAttack(battle.getCardsForAttack().stream().findFirst().orElse(null));
+				cardsCountNeedToDraw--;
+			}
+			game.endBattle(battle);
+		}
+		cardTrump = game.getTrump();
+		Assertions.assertNotNull(cardTrump);
+	}
+	@Test
+	void getTrumpForEmptyDeck() {
+		int playersCount = 6;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		PlayingCard36 cardTrump = game.getTrump();
+		Assertions.assertNotNull(cardTrump);
 	}
 
 	@Test
