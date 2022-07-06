@@ -6,9 +6,10 @@ import com.longboard.game.durak.card.PlayingCard36;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DurakCardService {
+public class DurakCardUtils {
 
 	public static boolean canBeat(PlayingCard36 cardToPlay, PlayingCard36 attacker, CardSuit trump) {
 		if (attacker == null || cardToPlay == null) {
@@ -27,7 +28,7 @@ public class DurakCardService {
 		if (CollectionUtils.isEmpty(playedCards)) {
 			return true;
 		}
-		return playedCards.stream().map(PlayingCard36::getRank).collect(Collectors.toList()).contains(cardToPlay.getRank());
+		return playedCards.stream().filter(Objects::nonNull).map(PlayingCard36::getRank).collect(Collectors.toList()).contains(cardToPlay.getRank());
 	}
 
 }
