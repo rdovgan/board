@@ -14,14 +14,11 @@ import java.util.Objects;
 class DurakGameTest {
 
 	@Test
-	void initialiseGameWithWrongNumberOfPlayers() {
+	void testInitialiseGame() {
 		Assertions.assertThrows(InitialisationException.class, () -> new DurakGame().initialiseGame(-2));
 		Assertions.assertThrows(InitialisationException.class, () -> new DurakGame().initialiseGame(DurakGame.MIN_PLAYERS_COUNT - 1));
 		Assertions.assertThrows(InitialisationException.class, () -> new DurakGame().initialiseGame(DurakGame.MAX_PLAYERS_COUNT + 1));
-	}
 
-	@Test
-	void initialiseGame() {
 		Integer playersCount = 3;
 		DurakGame game = new DurakGame();
 		Assertions.assertTrue(CollectionUtils.isEmpty(game.getDeck()));
@@ -34,7 +31,7 @@ class DurakGameTest {
 	}
 
 	@Test
-	void defineFirstPlayer() {
+	void testDefineFirstPlayer() {
 		DurakGame game = new DurakGame();
 		game.initialiseGame(6);
 		Assertions.assertEquals(0, game.getDeck().size());
@@ -49,7 +46,7 @@ class DurakGameTest {
 	}
 
 	@Test
-	void definePlayerToAttack() {
+	void testDefinePlayerToAttack() {
 		Integer playersCount = 2;
 		DurakGame game = new DurakGame();
 		game.initialiseGame(playersCount);
@@ -60,5 +57,44 @@ class DurakGameTest {
 		IsPlayer<PlayingCard36> playerToAttack = game.definePlayerToAttack(firstPlayer);
 		Assertions.assertNotNull(playerToAttack);
 		Assertions.assertNotEquals(firstPlayer, playerToAttack);
+	}
+
+	@Test
+	void defineNextPlayerToAttack() {
+		Integer playersCount = 3;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		List<IsPlayer<PlayingCard36>> players = game.getActivePlayers();
+		Assertions.assertTrue(CollectionUtils.isNotEmpty(players));
+		Assertions.assertEquals(playersCount, players.size());
+
+	}
+
+	@Test
+	void endGame() {
+	}
+
+	@Test
+	void startBattle() {
+	}
+
+	@Test
+	void getDeck() {
+	}
+
+	@Test
+	void getDiscard() {
+	}
+
+	@Test
+	void getTrump() {
+	}
+
+	@Test
+	void getActivePlayers() {
+	}
+
+	@Test
+	void endBattle() {
 	}
 }
