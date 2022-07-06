@@ -40,8 +40,8 @@ public class DurakBattle {
 	}
 
 	public List<PlayingCard36> getCardsForAttack() {
-		Set<CardRank> battlingCardsRank = Stream.concat(battlingCards.getBattlingCards().values().stream().map(PlayingCard36::getRank),
-				battlingCards.getBattlingCards().keySet().stream().map(PlayingCard36::getRank)).collect(Collectors.toSet());
+		Set<CardRank> battlingCardsRank = Stream.concat(battlingCards.getBattlingCards().values().stream().filter(Objects::nonNull).map(PlayingCard36::getRank),
+				battlingCards.getBattlingCards().keySet().stream().filter(Objects::nonNull).map(PlayingCard36::getRank)).collect(Collectors.toSet());
 		if (CollectionUtils.isEmpty(battlingCardsRank)) {
 			return attacker.getHandCards();
 		}
