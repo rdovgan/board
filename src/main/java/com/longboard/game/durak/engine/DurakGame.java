@@ -105,8 +105,7 @@ public class DurakGame {
 				}
 			}
 		}
-		LogUtils.error("Couldn't find attacker in active pool of players");
-		return null;
+		return this.activePlayers.stream().findFirst().orElse(null);
 	}
 
 	public IsPlayer<PlayingCard36> defineNextPlayerToAttack(DurakBattle endedBattle) {
@@ -133,12 +132,7 @@ public class DurakGame {
 			return null;
 		}
 		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
-		//TODO check if currentPlayer is active
-		if (previousBattle == null) {
-			//first battle
-			return newBattle;
-		}
-		battles.add(previousBattle);
+		battles.add(newBattle);
 		return newBattle;
 	}
 
