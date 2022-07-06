@@ -22,8 +22,8 @@ public class DurakGameDisplay extends Frame {
 	public static final int TOTAL_WIDTH = 1200;
 	public static final int TOTAL_HEIGHT = 800;
 
-	private static final int CARD_WIDTH = 57 * 3 / 2;
-	private static final int CARD_HEIGHT = 89 * 3 / 2;
+	public static final int CARD_WIDTH = 57 * 3 / 2;
+	public static final int CARD_HEIGHT = 89 * 3 / 2;
 
 	private static Panel topPlayerPanel;
 	private static Panel bottomPlayerPanel;
@@ -39,9 +39,9 @@ public class DurakGameDisplay extends Frame {
 	DurakGameDisplay() {
 		super.setSize(TOTAL_WIDTH + 2 * PADDING, TOTAL_HEIGHT + 4 * PADDING);
 
-		add(displayUtils.defineTopPanel());
-		add(displayUtils.addMiddlePanel());
-		add(displayUtils.addBottomPanel());
+		add(topPlayerPanel = displayUtils.defineTopPanel());
+		add(middlePanel = displayUtils.defineMiddlePanel());
+		add(bottomPlayerPanel = displayUtils.defineBottomPanel());
 
 		add(new Panel());
 
@@ -156,22 +156,7 @@ public class DurakGameDisplay extends Frame {
 
 		displayPlayersHand();
 
-		if (currentBattle == null && MapUtils.isNotEmpty(game.endGame())) {
-			middlePanel.removeAll();
-
-			Panel playersScore = new Panel();
-			playersScore.setBounds(CARD_WIDTH + PADDING * 2, PADDING * 2, CARD_WIDTH * 2, CARD_HEIGHT + 2 * PADDING);
-			Label playersScoreLabel = new Label();
-			playersScoreLabel.setText(
-					game.endGame().entrySet().stream().map(entry -> entry.getKey() + ". " + entry.getValue().getName()).collect(Collectors.joining("\n")));
-			playersScoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-			playersScoreLabel.setBounds(PADDING, PADDING, CARD_WIDTH * 2, CARD_HEIGHT + 2 * PADDING);
-			playersScoreLabel.setForeground(new Color(3, 33, 51));
-			playersScore.add(playersScoreLabel);
-			playersScore.setBackground(new Color(22, 93, 105));
-
-			middlePanel.add(playersScore);
-		}
+		displayUtils.definePlayerScore(middlePanel, game, currentBattle);
 	}
 
 	private static void displayPlayersHand() {

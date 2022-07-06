@@ -7,36 +7,40 @@ import com.longboard.game.durak.engine.DurakPlayer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DisplayUtilsTest {
 
 	private DisplayUtils displayUtils = new DisplayUtils();
 
+	private DurakGame initGame() {
+		DurakGame game = new DurakGame();
+		game.initialiseGame(2);
+		return game;
+	}
+
 	@Test
 	void defineTopPanel() {
-		Assertions.assertNotNull(displayUtils.defineTopPanel());
+		Panel panelTop = displayUtils.defineTopPanel();
+		Assertions.assertNotNull(panelTop);
+		Panel panelMiddle = displayUtils.defineMiddlePanel();
+		Assertions.assertNotNull(panelMiddle);
+		Panel panelBottom = displayUtils.defineBottomPanel();
+		Assertions.assertNotNull(panelBottom);
+		displayUtils.clearBoards(panelTop, panelMiddle, panelBottom);
 	}
 
 	@Test
-	void addMiddlePanel() {
-		Assertions.assertNotNull(displayUtils.addMiddlePanel());
+	void testEndCurrentTurn() {
+		DurakGame game = initGame();
+		Assertions.assertNotNull(displayUtils.endCurrentTurn(game, game.startBattle(null, game.defineFirstPlayer()), game.defineFirstPlayer()));
 	}
-
 	@Test
-	void addBottomPanel() {
-		Assertions.assertNotNull(displayUtils.addBottomPanel());
-	}
-
-	@Test
-	void clearBoards() {
-		displayUtils.clearBoards(displayUtils.defineTopPanel(), displayUtils.addMiddlePanel(), displayUtils.addBottomPanel());
-	}
-
-	@Test
-	void endCurrentTurn() {
-		displayUtils.endCurrentTurn(new DurakGame(), new DurakBattle(null, null, null), new DurakPlayer(null, PlayerColor.Green, new ArrayList<>()));
+	void testDefinePlayerScore() {
+		DurakGame game = initGame();
+		Panel middlePanel = displayUtils.defineMiddlePanel();
+		displayUtils.definePlayerScore(middlePanel, game, game.startBattle(null, game.defineFirstPlayer()));
+		Assertions.assertNotNull(middlePanel.getComponent(0));
 	}
 }
