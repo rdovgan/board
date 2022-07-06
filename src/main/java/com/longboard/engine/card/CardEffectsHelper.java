@@ -38,8 +38,8 @@ public class CardEffectsHelper {
 
 	public static Consumer<IsCard> equipItem(IsItem item) {
 		return card -> {
-			LogUtils.info("Equipped item " + item.getName() + " for player " + card.getOwner());
 			item.equip(card.getOwner());
+			LogUtils.info("Equipped item " + item.getName() + " for player " + card.getOwner());
 		};
 	}
 }

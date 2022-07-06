@@ -44,7 +44,7 @@ public class ResourceUtils {
 		LogUtils.info("Decreased resource " + resource.name() + " for player " + player.getName() + " by " + value + ". Now it has " + (previousValue - value));
 	}
 
-	private Integer checkResource(IsPlayer<IsCard> player, Resource resource, Integer value) {
+	private static Integer checkResource(IsPlayer<IsCard> player, Resource resource, Integer value) {
 		Integer previousValue = player.getResources().get(resource);
 		if (previousValue == null || previousValue < value) {
 			LogUtils.error("Player " + player.getName() + " can't pay " + value + " " + resource.name() + " resource. Available only " + previousValue);
@@ -68,6 +68,10 @@ public class ResourceUtils {
 		}
 		IsPlayer player = card.getOwner();
 		IsCost cost = card.getCost();
+		return checkCost(player, cost);
+	}
+
+	public static boolean checkCost(IsPlayer player, IsCost cost) {
 		return cost.getCost().entrySet().stream().noneMatch(resourceCost -> checkResource(player, resourceCost.getKey(), resourceCost.getValue()) == null);
 	}
 

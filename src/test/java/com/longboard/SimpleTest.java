@@ -1,7 +1,9 @@
 package com.longboard;
 
+import com.longboard.base.Body;
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
+import com.longboard.engine.ResourceUtils;
 import com.longboard.entity.CardTest;
 import com.longboard.entity.IsPlayer;
 import com.longboard.entity.PlayerTest;
@@ -29,8 +31,10 @@ public class SimpleTest {
 	private static final Integer START_EXPERIENCE = 0;
 	private static final Integer HUGE_DAMAGE = -25;
 
-	private List<IsCard> initHand() {
-		List<IsCard> hand = new ArrayList<>();
+	private ResourceUtils resourceUtils = new ResourceUtils();
+
+	private List<CardTest> initHand() {
+		List<CardTest> hand = new ArrayList<>();
 		hand.add(TestResourcesPoolConstants.HEALING_SPELL);
 		return hand;
 	}
@@ -92,5 +96,21 @@ public class SimpleTest {
 		healSpell.play();
 		Assertions.assertFalse(redPlayer.getHandCards().contains(healSpell));
 		Assertions.assertEquals(IsPlayer.MAX_HEALTH + HUGE_DAMAGE + 10, redPlayer.getCurrentHealth());
+	}
+
+	@Test
+	public void testBody() {
+		redPlayer.addCardsToHand(playersDeck);
+		IsCard sword = redPlayer.getHandCards().stream().filter(card -> TestResourcesPoolConstants.IRON_SWORD_CARD.getName().equals(card.getName()))
+				.findFirst().orElseThrow();
+		Assertions.assertNotNull(sword);
+		Assertions.assertEquals(START_GOLD, redPlayer.getResource(Resource.Gold));
+		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.RightHand));
+		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.LeftHand));
+		Assertions.assertTrue(resourceUtils.isPlayable(sword));
+		sword.play();
+		Assertions.assertEquals(START_GOLD - 10, redPlayer.getResource(Resource.Gold));
+		Assertions.assertEquals(Body.BodyStatus.Equipped, redPlayer.getBody().getBodyStatus(Body.BodyPart.RightHand));
+		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.LeftHand));
 	}
 }

@@ -17,7 +17,8 @@ public class CardTest implements IsCard {
 	private final CardType cardType;
 	private IsCost cost;
 	private Predicate<IsCard> condition;
-	private IsPlayer owner;
+	private IsPlayer<CardTest> owner;
+	private UUID ownerId;
 	private Consumer<IsCard> effect;
 
 	public CardTest(Long number, String name, String description, CardType cardType, IsCost cost, Predicate<IsCard> condition, Consumer<IsCard> effect) {
@@ -70,6 +71,16 @@ public class CardTest implements IsCard {
 	}
 
 	@Override
+	public void setOwnerId(UUID ownerId) {
+		this.ownerId = ownerId;
+	}
+
+	@Override
+	public UUID getOwnerId() {
+		return ownerId;
+	}
+
+	@Override
 	public void setOwner(IsPlayer owner) {
 		this.owner = owner;
 	}
@@ -78,6 +89,7 @@ public class CardTest implements IsCard {
 	public IsPlayer getOwner() {
 		return owner;
 	}
+
 
 	@Override
 	public boolean hasOwner() {

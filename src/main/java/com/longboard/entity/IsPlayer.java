@@ -60,6 +60,7 @@ public interface IsPlayer<C extends IsCard> extends IsTarget {
 		}
 		if (CollectionUtils.isNotEmpty(cards)) {
 			cards.forEach(card -> card.setOwner((IsPlayer<IsCard>) this));
+			cards.forEach(card -> card.setOwnerId(getId()));
 			getHandCards().addAll(cards);
 		} else {
 			LogUtils.error("Card list is empty");
@@ -114,7 +115,7 @@ public interface IsPlayer<C extends IsCard> extends IsTarget {
 		if (getCurrentHealth() == 0) {
 			LogUtils.error("Wrong player initialisation. Health is zero");
 		}
-		if (getHandCards() == null || getHandCards().stream().anyMatch(card -> card.getOwner() != null)) {
+		if (getHandCards() == null || getHandCards().stream().anyMatch(card -> card.getOwner() == null)) {
 			LogUtils.error("Wrong player initialisation. There is card in hand without owner link");
 		}
 	}
