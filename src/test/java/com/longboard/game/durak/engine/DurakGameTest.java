@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 class DurakGameTest {
@@ -67,11 +68,40 @@ class DurakGameTest {
 		List<IsPlayer<PlayingCard36>> players = game.getActivePlayers();
 		Assertions.assertTrue(CollectionUtils.isNotEmpty(players));
 		Assertions.assertEquals(playersCount, players.size());
-
+		IsPlayer<PlayingCard36> firstPlayer = game.defineFirstPlayer();
+		DurakBattle battle = game.startBattle(null, firstPlayer);
+		game.endBattle(battle);
+		IsPlayer<PlayingCard36> secondPlayer = game.defineNextPlayerToAttack(battle);
+		battle = game.startBattle(battle, secondPlayer);
+		game.endBattle(battle);
+		IsPlayer<PlayingCard36> thirdPlayer = game.defineNextPlayerToAttack(battle);
+		Assertions.assertNotEquals(firstPlayer.getId(), secondPlayer.getId());
+		Assertions.assertNotEquals(thirdPlayer.getId(), secondPlayer.getId());
+		Assertions.assertNotEquals(firstPlayer.getId(), thirdPlayer.getId());
+		Assertions.assertTrue(players.contains(firstPlayer));
+		Assertions.assertTrue(players.contains(secondPlayer));
+		Assertions.assertTrue(players.contains(thirdPlayer));
 	}
 
 	@Test
 	void endGame() {
+		int playersCount = 5;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		DurakBattle battle = null;
+		while (game.getActivePlayers().size() > 1) {
+			IsPlayer<PlayingCard36> attacker = game.defineNextPlayerToAttack(battle);
+			battle = game.startBattle(battle, attacker);
+			PlayingCard36 attackCard = battle.getCardsForAttack().stream().findFirst().orElse(null);
+			battle.playCardToAttack(attackCard);
+			PlayingCard36 defendCard = battle.getCardsForDefend(attackCard).stream().findFirst().orElse(null);
+			if (defendCard != null) {
+				battle.playCardToDefend(defendCard, attackCard);
+			}
+			game.endBattle(battle);
+		}
+		Map<Integer, IsPlayer<PlayingCard36>> winners = game.endGame();
+		Assertions.assertEquals(playersCount - 1, winners.entrySet().size());
 	}
 
 	@Test
