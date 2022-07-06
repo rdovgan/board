@@ -3,18 +3,15 @@ package com.longboard.game.durak.engine;
 import com.longboard.entity.IsPlayer;
 import com.longboard.exception.InitialisationException;
 import com.longboard.game.durak.card.CardRank;
-import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 class DurakGameTest {
 
@@ -173,9 +170,40 @@ class DurakGameTest {
 
 	@Test
 	void getActivePlayers() {
+		int playersCount = 4;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		Assertions.assertTrue(CollectionUtils.isNotEmpty(game.getActivePlayers()));
+		Assertions.assertEquals(playersCount, game.getActivePlayers().size());
 	}
 
 	@Test
 	void endBattle() {
+		int playersCount = 2;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		DurakBattle battle = game.startBattle(null, game.defineFirstPlayer());
+		PlayingCard36 attackCard = battle.getCardsForAttack().stream().findFirst().orElse(null);
+		battle.playCardToAttack(attackCard);
+		PlayingCard36 defendCard = battle.getCardsForDefend(attackCard).stream().findFirst().orElse(null);
+		if (defendCard != null) {
+			battle.playCardToDefend(defendCard, attackCard);
+		}
+		game.endBattle(battle);
+		battle = game.startBattle(battle, battle.getAttacker());
+		Assertions.assertEquals(DurakGame.CARDS_COUNT_IN_HAND_ON_START, battle.getAttacker().getHandCards().size());
+		Assertions.assertTrue(battle.getDefender().getHandCards().size() >= DurakGame.CARDS_COUNT_IN_HAND_ON_START);
+		UUID attackerId = battle.getAttacker().getId();
+		UUID defenderId = battle.getDefender().getId();
+		Assertions.assertTrue(battle.getAttacker().getHandCards().stream().allMatch(card -> card.getOwnerId() == attackerId));
+		Assertions.assertTrue(battle.getDefender().getHandCards().stream().allMatch(card -> card.getOwnerId() == defenderId));
+	}
+
+	@Test
+	void getCurrentBattle() {
+		int playersCount = 4;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+		game.startBattle(null, game.defineFirstPlayer());
 	}
 }
