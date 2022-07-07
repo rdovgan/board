@@ -28,24 +28,8 @@ jobs:
         env:
           DISPLAY: ":0.0"
         run: mvn -B package --file pom.xml
-
-  report:
-    needs: build
-    
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up environment
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
-          
+        
       - name: Send Report to Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
-    
