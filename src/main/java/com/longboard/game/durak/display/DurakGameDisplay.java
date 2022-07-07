@@ -1,5 +1,6 @@
 package com.longboard.game.durak.display;
 
+import com.longboard.engine.LogUtils;
 import com.longboard.entity.IsPlayer;
 import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
@@ -8,7 +9,6 @@ import com.longboard.game.durak.engine.DurakGame;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
@@ -18,28 +18,30 @@ import java.util.stream.IntStream;
 
 public class DurakGameDisplay extends Frame {
 
-	public int padding = 10;
-	public int totalWidth = 1200;
-	public int totalHeight = 800;
+	public static final int PADDING = 10;
+	public static final int TOTAL_WIDTH = 1200;
+	public static final int TOTAL_HEIGHT = 800;
 
-	private int cardWidth = 57 * 3 / 2;
-	private int cardHeight = 89 * 3 / 2;
+	public static final int CARD_WIDTH = 57 * 3 / 2;
+	public static final int CARD_HEIGHT = 89 * 3 / 2;
 
-	private Panel topPlayerPanel;
-	private Panel bottomPlayerPanel;
-	private Panel middlePanel;
+	private static Panel topPlayerPanel;
+	private static Panel bottomPlayerPanel;
+	private static Panel middlePanel;
 
-	private DurakGame game = new DurakGame();
-	private IsPlayer<PlayingCard36> currentPlayer = null;
-	private DurakBattle currentBattle = null;
-	private PlayingCard36 cardToBeat = null;
+	private static DurakGame game = new DurakGame();
+	private static IsPlayer<PlayingCard36> currentPlayer = null;
+	private static DurakBattle currentBattle = null;
+	private static PlayingCard36 cardToBeat = null;
+
+	private static final DisplayUtils displayUtils = new DisplayUtils();
 
 	DurakGameDisplay() {
-		super.setSize(totalWidth + 2 * padding, totalHeight + 4 * padding);
+		super.setSize(TOTAL_WIDTH + 2 * PADDING, TOTAL_HEIGHT + 4 * PADDING);
 
-		addTopPanel();
-		addMiddlePanel();
-		addBottomPanel();
+		add(topPlayerPanel = displayUtils.defineTopPanel());
+		add(middlePanel = displayUtils.defineMiddlePanel());
+		add(bottomPlayerPanel = displayUtils.defineBottomPanel());
 
 		add(new Panel());
 
@@ -48,58 +50,13 @@ public class DurakGameDisplay extends Frame {
 		super.setLayout(null);
 	}
 
-	private void addTopPanel() {
-		topPlayerPanel = new Panel();
-		topPlayerPanel.setBounds(padding, padding, totalWidth, totalHeight / 8 * 3);
-		topPlayerPanel.setBackground(new Color(204, 176, 137));
-		topPlayerPanel.setVisible(true);
-
-		add(topPlayerPanel);
-	}
-
-	private void addMiddlePanel() {
-		middlePanel = new Panel();
-		middlePanel.setBounds(padding, totalHeight / 8 * 3 + 2 * padding, totalWidth, totalHeight / 8 * 2);
-		middlePanel.setBackground(new Color(172, 128, 191));
-
-		Label selectPlayerLabel = new Label("Please select number of players");
-		selectPlayerLabel.setBounds(padding * 2, padding * 2, totalWidth / 2, padding * 2);
-		middlePanel.add(selectPlayerLabel);
-
-		JComboBox<Integer> playerCountBox = new JComboBox<>();
-		playerCountBox.addItem(2);
-		playerCountBox.addItem(3);
-		playerCountBox.addItem(4);
-		playerCountBox.addItem(5);
-		playerCountBox.addItem(6);
-		playerCountBox.setBounds(padding * 3, padding * 2, padding * 5, padding * 2);
-		middlePanel.add(playerCountBox);
-
-		Button confirmPlayersCountAndStartGame = new Button("Confirm");
-		confirmPlayersCountAndStartGame.setBounds(padding, padding * 2, padding * 5, padding * 2);
-		confirmPlayersCountAndStartGame.addActionListener(e -> startGame(playerCountBox.getSelectedItem()));
-		middlePanel.add(confirmPlayersCountAndStartGame);
-
-		middlePanel.setVisible(true);
-		add(middlePanel);
-	}
-
-	private void addBottomPanel() {
-		bottomPlayerPanel = new Panel();
-		bottomPlayerPanel.setBounds(padding, totalHeight / 8 * 5 + 3 * padding, totalWidth, totalHeight / 8 * 3 - padding);
-		bottomPlayerPanel.setBackground(new Color(142, 204, 137));
-
-		bottomPlayerPanel.setVisible(true);
-		add(bottomPlayerPanel);
-	}
-
-	private void startGame(Object selectedItem) {
+	public static void startGame(Object selectedItem) {
 		int playersCount = (int) selectedItem;
-		clearBoard();
+		displayUtils.clearBoards(topPlayerPanel, middlePanel, bottomPlayerPanel);
 		prepareBoard(playersCount);
 	}
 
-	private void prepareBoard(int playersCount) {
+	private static void prepareBoard(int playersCount) {
 		game.initialiseGame(playersCount);
 		currentPlayer = game.getActivePlayers().get(0);
 		currentBattle = game.startBattle(null, game.defineFirstPlayer());
@@ -110,11 +67,11 @@ public class DurakGameDisplay extends Frame {
 				currentBattle.playCardToAttack(cardToBeat);
 			}
 		}
-		refreshBoard();
+		refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
 	}
 
 	//TODO implement AI for battle
-	private void autoBattle(DurakBattle battle) {
+	private static void autoBattle(DurakBattle battle) {
 		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
 			//battle
 			PlayingCard36 cardToAttack = battle.getCardsForAttack().stream().findAny().orElse(null);
@@ -132,7 +89,7 @@ public class DurakGameDisplay extends Frame {
 		currentBattle = game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 	}
 
-	private void currentPlayerPlayCard(PlayingCard36 card) {
+	private static void currentPlayerPlayCard(PlayingCard36 card) {
 		try {
 			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
 				//player attack
@@ -159,13 +116,13 @@ public class DurakGameDisplay extends Frame {
 				}
 			}
 		} catch (Exception e) {
-			super.setTitle(e.getMessage());
+			LogUtils.error(e.getMessage());
 		}
-		refreshBoard();
+		refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
 	}
 
-	private void refreshBoard() {
-		clearBoard();
+	private static void refreshBoard(Panel topPlayerPanel, Panel middlePanel, Panel bottomPlayerPanel) {
+		displayUtils.clearBoards(topPlayerPanel, middlePanel, bottomPlayerPanel);
 		//auto battle
 		if (currentBattle != null) {
 			while (currentBattle.getDefender().getId() != currentPlayer.getId() && currentBattle.getAttacker().getId() != currentPlayer.getId()) {
@@ -182,7 +139,7 @@ public class DurakGameDisplay extends Frame {
 
 		List<IsPlayer<PlayingCard36>> opponents = game.getActivePlayers().stream().filter(player -> player.getId() != currentPlayer.getId())
 				.collect(Collectors.toList());
-		int width = padding * 20;
+		int width = PADDING * 20;
 		int height = topPlayerPanel.getHeight();
 		//Draw opponents area on top panel
 		IntStream.range(0, opponents.size()).forEach(i -> displayOpponentArea(opponents, width, height, i));
@@ -199,72 +156,48 @@ public class DurakGameDisplay extends Frame {
 
 		displayPlayersHand();
 
-		if (currentBattle == null && MapUtils.isNotEmpty(game.endGame())) {
-			middlePanel.removeAll();
-
-			Panel playersScore = new Panel();
-			playersScore.setBounds(cardWidth + padding * 2, padding * 2, cardWidth * 2, cardHeight + 2 * padding);
-			Label playersScoreLabel = new Label();
-			playersScoreLabel.setText(
-					game.endGame().entrySet().stream().map(entry -> entry.getKey() + ". " + entry.getValue().getName()).collect(Collectors.joining("\n")));
-			playersScoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-			playersScoreLabel.setBounds(padding, padding, cardWidth * 2, cardHeight + 2 * padding);
-			playersScoreLabel.setForeground(new Color(3, 33, 51));
-			playersScore.add(playersScoreLabel);
-			playersScore.setBackground(new Color(22, 93, 105));
-
-			middlePanel.add(playersScore);
-		}
+		displayUtils.definePlayerScore(middlePanel, game, currentBattle);
 	}
 
-	private void displayPlayersHand() {
+	private static void displayPlayersHand() {
 		List<PlayingCard36> cardsInHand = currentPlayer.getHandCards().stream().sorted(Comparator.comparing(card -> card.getRank().getValue()))
 				.sorted(Comparator.comparing(card -> card.getSuit().getValue())).collect(Collectors.toList());
 		IntStream.range(0, cardsInHand.size()).forEach(i -> {
 			PlayingCard36 card = cardsInHand.get(i);
 			Button cardButton = new Button();
 			cardButton.setName(card.getId().toString());
-			cardButton.setBounds(padding + cardWidth * i, padding, cardWidth, cardHeight);
+			cardButton.setBounds(PADDING + CARD_WIDTH * i, PADDING, CARD_WIDTH, CARD_HEIGHT);
 			cardButton.setLabel(card.getName());
 			cardButton.setFont(new Font("Arial", Font.PLAIN, 32));
 			if (card.getSuit() == CardSuit.Heart || card.getSuit() == CardSuit.Diamond) {
 				cardButton.setForeground(Color.RED);
 			}
-			cardButton.addActionListener(listener -> currentPlayerPlayCard(card));
+			cardButton.addActionListener(listener -> {
+				currentPlayerPlayCard(card);
+				refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
+			});
 			bottomPlayerPanel.add(cardButton);
 		});
 		Button endTurn = new Button();
-		endTurn.setBounds(padding, cardHeight + 5 * padding, cardWidth, 5 * padding);
+		endTurn.setBounds(PADDING, CARD_HEIGHT + 5 * PADDING, CARD_WIDTH, 5 * PADDING);
 		endTurn.setLabel("End turn");
-		endTurn.addActionListener(listener -> endCurrentTurn());
+		endTurn.addActionListener(listener -> {
+			currentBattle = displayUtils.endCurrentTurn(game, currentBattle, currentPlayer);
+			refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
+		});
 		bottomPlayerPanel.add(endTurn);
 	}
 
-	private void endCurrentTurn() {
-		try {//TODO here define winner
-			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
-				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
-			} else if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
-				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
-			}
-		} catch (Exception e) {
-			super.setTitle(e.getMessage());
-		}
-		refreshBoard();
-	}
-
-	private void displayDeckWithCounter(Button trumpCard) {
+	private static void displayDeckWithCounter(Button trumpCard) {
 		if (game.getDeck().size() > 0) {
 
 			Panel deckCounter = new Panel();
-			deckCounter.setBounds(cardWidth * 3 / 2 + padding * 3, padding * 2, cardWidth * 3 / 2 - 2 * padding, cardHeight / 2 + padding);
+			deckCounter.setBounds(CARD_WIDTH * 3 / 2 + PADDING * 3, PADDING * 2, CARD_WIDTH * 3 / 2 - 2 * PADDING, CARD_HEIGHT / 2 + PADDING);
 			Label counterLabel = new Label();
 			counterLabel.setText(String.valueOf(game.getDeck().size()));
 			counterLabel.setFont(new Font("Arial", Font.PLAIN, 48));
 			counterLabel.setAlignment(Label.CENTER);
-			counterLabel.setBounds(padding, 2 * padding, cardWidth, 4 * padding);
+			counterLabel.setBounds(PADDING, 2 * PADDING, CARD_WIDTH, 4 * PADDING);
 			counterLabel.setForeground(new Color(10, 51, 3));
 			deckCounter.add(counterLabel);
 			deckCounter.setBackground(new Color(76, 105, 22));
@@ -272,12 +205,13 @@ public class DurakGameDisplay extends Frame {
 			middlePanel.add(deckCounter);
 
 			Panel discardCounter = new Panel();
-			discardCounter.setBounds(cardWidth * 3 / 2 + padding * 3, cardHeight / 2 + 3 * padding, cardWidth * 3 / 2 - 2 * padding, cardHeight / 2 + padding);
+			discardCounter.setBounds(CARD_WIDTH * 3 / 2 + PADDING * 3, CARD_HEIGHT / 2 + 3 * PADDING, CARD_WIDTH * 3 / 2 - 2 * PADDING,
+					CARD_HEIGHT / 2 + PADDING);
 			Label discardCounterLabel = new Label();
 			discardCounterLabel.setText(String.valueOf(game.getDiscard().size()));
 			discardCounterLabel.setFont(new Font("Arial", Font.PLAIN, 48));
 			discardCounterLabel.setAlignment(Label.CENTER);
-			discardCounterLabel.setBounds(padding, 2 * padding, cardWidth, 4 * padding);
+			discardCounterLabel.setBounds(PADDING, 2 * PADDING, CARD_WIDTH, 4 * PADDING);
 			discardCounterLabel.setForeground(new Color(44, 10, 13));
 			discardCounter.add(discardCounterLabel);
 			discardCounter.setBackground(new Color(170, 83, 91));
@@ -288,9 +222,9 @@ public class DurakGameDisplay extends Frame {
 		}
 	}
 
-	private Button displayTrumpCard() {
+	private static Button displayTrumpCard() {
 		Button trumpCard = new Button();
-		trumpCard.setBounds(padding * 2, padding * 4, cardWidth, cardHeight);
+		trumpCard.setBounds(PADDING * 2, PADDING * 4, CARD_WIDTH, CARD_HEIGHT);
 		trumpCard.setLabel(game.getTrump().getName());
 		trumpCard.setFont(new Font("Arial", Font.PLAIN, 38));
 		if (game.getTrump().getSuit() == CardSuit.Heart || game.getTrump().getSuit() == CardSuit.Diamond) {
@@ -300,9 +234,9 @@ public class DurakGameDisplay extends Frame {
 		return trumpCard;
 	}
 
-	private void displayCardToBeat() {
+	private static void displayCardToBeat() {
 		Button cardToBeatButton = new Button();
-		cardToBeatButton.setBounds(3 * cardWidth + padding * 6, padding * 4, cardWidth, cardHeight);
+		cardToBeatButton.setBounds(3 * CARD_WIDTH + PADDING * 6, PADDING * 4, CARD_WIDTH, CARD_HEIGHT);
 		cardToBeatButton.setLabel(cardToBeat.getName());
 		cardToBeatButton.setFont(new Font("Arial", Font.PLAIN, 38));
 		if (cardToBeat.getSuit() == CardSuit.Heart || cardToBeat.getSuit() == CardSuit.Diamond) {
@@ -311,17 +245,17 @@ public class DurakGameDisplay extends Frame {
 		middlePanel.add(cardToBeatButton);
 	}
 
-	private void displayBattlingCards() {
+	private static void displayBattlingCards() {
 		if (currentBattle == null || currentBattle.getBattlingCards() == null || MapUtils.isEmpty(currentBattle.getBattlingCards().getBattlingCards())) {
 			return;
 		}
-		int width = cardWidth + 4 * padding;
+		int width = CARD_WIDTH + 4 * PADDING;
 		int position = 0;
 		for (Map.Entry<PlayingCard36, PlayingCard36> cardPair : currentBattle.getBattlingCards().getBattlingCards().entrySet()) {
 			if (cardPair.getValue() != null) {
 				PlayingCard36 firstCardToBeat = cardPair.getKey();
 				Button firstCardToBeatButton = new Button();
-				firstCardToBeatButton.setBounds(3 * width + cardWidth + (cardWidth / 2 + padding) * position, padding * 4, cardWidth / 2, cardHeight / 2);
+				firstCardToBeatButton.setBounds(3 * width + CARD_WIDTH + (CARD_WIDTH / 2 + PADDING) * position, PADDING * 4, CARD_WIDTH / 2, CARD_HEIGHT / 2);
 				firstCardToBeatButton.setLabel(firstCardToBeat.getName());
 				firstCardToBeatButton.setFont(new Font("Arial", Font.PLAIN, 18));
 				if (firstCardToBeat.getSuit() == CardSuit.Heart || firstCardToBeat.getSuit() == CardSuit.Diamond) {
@@ -331,8 +265,8 @@ public class DurakGameDisplay extends Frame {
 
 				PlayingCard36 secondCardToDefend = cardPair.getValue();
 				Button secondCardToDefendButton = new Button();
-				secondCardToDefendButton.setBounds(3 * width + cardWidth + (cardWidth / 2 + padding) * position, padding * 5 + cardHeight / 2, cardWidth / 2,
-						cardHeight / 2);
+				secondCardToDefendButton.setBounds(3 * width + CARD_WIDTH + (CARD_WIDTH / 2 + PADDING) * position, PADDING * 5 + CARD_HEIGHT / 2,
+						CARD_WIDTH / 2, CARD_HEIGHT / 2);
 				secondCardToDefendButton.setLabel(secondCardToDefend.getName());
 				secondCardToDefendButton.setFont(new Font("Arial", Font.PLAIN, 18));
 				if (secondCardToDefend.getSuit() == CardSuit.Heart || secondCardToDefend.getSuit() == CardSuit.Diamond) {
@@ -345,32 +279,26 @@ public class DurakGameDisplay extends Frame {
 		}
 	}
 
-	private void displayOpponentArea(List<IsPlayer<PlayingCard36>> opponents, int width, int height, int i) {
+	private static void displayOpponentArea(List<IsPlayer<PlayingCard36>> opponents, int width, int height, int i) {
 		IsPlayer<PlayingCard36> opponent = opponents.get(i);
 		Panel playerPanel = new Panel();
 		playerPanel.setName(opponent.getId().toString());
-		playerPanel.setBounds(i * width + padding, padding * 3, width - padding, height - 4 * padding);
+		playerPanel.setBounds(i * width + PADDING, PADDING * 3, width - PADDING, height - 4 * PADDING);
 		playerPanel.setBackground(Color.CYAN);
 
 		Label opponentName = new Label(opponent.getName());
-		opponentName.setBounds(0, padding * 2, width - 2 * padding, padding * 4);
+		opponentName.setBounds(0, PADDING * 2, width - 2 * PADDING, PADDING * 4);
 		opponentName.setAlignment(Label.CENTER);
 		playerPanel.add(opponentName);
 
 		Button buttonCardsCount = new Button();
-		buttonCardsCount.setBounds(padding, padding * 8, width - 4 * padding, height / 2);
+		buttonCardsCount.setBounds(PADDING, PADDING * 8, width - 4 * PADDING, height / 2);
 		buttonCardsCount.setLabel(String.valueOf(opponent.getHandCards().size()));
 		buttonCardsCount.setFont(new Font("Arial", Font.PLAIN, 40));
 		buttonCardsCount.setForeground(Color.GRAY);
 		playerPanel.add(buttonCardsCount);
 
 		topPlayerPanel.add(playerPanel);
-	}
-
-	private void clearBoard() {
-		topPlayerPanel.removeAll();
-		middlePanel.removeAll();
-		bottomPlayerPanel.removeAll();
 	}
 
 	public static void main(String[] args) {
