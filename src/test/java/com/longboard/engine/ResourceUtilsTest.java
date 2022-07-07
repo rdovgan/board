@@ -68,8 +68,8 @@ class ResourceUtilsTest {
 	@Test
 	void checkCost() {
 		PlayerTest greenPlayer = initPlayer();
-		Assertions.assertFalse(ResourceUtils.checkCost(greenPlayer, new CostBuilder().addCost(Resource.Gold, 5).build()));
-		Assertions.assertFalse(ResourceUtils.checkCost(greenPlayer, new CostBuilder().build()));
-		Assertions.assertFalse(ResourceUtils.checkCost(null, new CostBuilder().build()));
+		Assertions.assertTrue(ResourceUtils.checkCost(greenPlayer, new CostBuilder().addCost(Resource.Gold, 5).build()));
+		Assertions.assertTrue(ResourceUtils.checkCost(greenPlayer, new CostBuilder().build()));
+		Assertions.assertTrue(ResourceUtils.checkCost(null, new CostBuilder().build()));
 	}
 }
