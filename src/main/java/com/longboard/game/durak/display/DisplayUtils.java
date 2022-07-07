@@ -51,32 +51,10 @@ public class DisplayUtils {
 		confirmPlayersCountAndStartGame.setBounds(DurakGameDisplay.PADDING, DurakGameDisplay.PADDING * 2, DurakGameDisplay.PADDING * 5,
 				DurakGameDisplay.PADDING * 2);
 		confirmPlayersCountAndStartGame.addActionListener(e -> DurakGameDisplay.startGame(playerCountBox.getSelectedItem()));
-		confirmPlayersCountAndStartGame.addKeyListener(getKeyListener(playerCountBox));
-		confirmPlayersCountAndStartGame.requestFocus();
 		middlePanel.add(confirmPlayersCountAndStartGame);
 
 		middlePanel.setVisible(true);
 		return middlePanel;
-	}
-
-	private KeyListener getKeyListener(JComboBox<Integer> playerCountBox) {
-		return new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					System.out.println("Hello");
-					DurakGameDisplay.startGame(playerCountBox.getSelectedItem());
-				}
-			}
-		};
 	}
 
 	public Panel defineBottomPanel() {
