@@ -28,3 +28,14 @@ jobs:
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+
+  report:
+    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Report to Codacy
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          DISPLAY: ":0.0"
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+    
