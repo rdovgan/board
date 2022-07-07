@@ -3,7 +3,6 @@ package com.longboard.entity;
 import com.longboard.base.Body;
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
-import com.longboard.entity.card.IsCard;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 
 import java.util.ArrayList;

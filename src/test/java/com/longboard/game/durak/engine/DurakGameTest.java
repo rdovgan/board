@@ -159,6 +159,7 @@ class DurakGameTest {
 		cardTrump = game.getTrump();
 		Assertions.assertNotNull(cardTrump);
 	}
+
 	@Test
 	void getTrumpForEmptyDeck() {
 		int playersCount = 6;

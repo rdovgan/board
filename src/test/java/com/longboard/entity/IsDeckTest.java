@@ -15,6 +15,7 @@ class IsDeckTest {
 		IsDeck<CardTest> testDeck = new DeckTest();
 		Assertions.assertThrows(IndexOutOfBoundsException.class, testDeck::draw);
 	}
+
 	@Test
 	public void testTargetType() {
 		IsDeck<CardTest> testDeck = new DeckTest();

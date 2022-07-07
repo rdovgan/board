@@ -90,7 +90,6 @@ public class CardTest implements IsCard {
 		return owner;
 	}
 
-
 	@Override
 	public boolean hasOwner() {
 		return IsCard.super.hasOwner();

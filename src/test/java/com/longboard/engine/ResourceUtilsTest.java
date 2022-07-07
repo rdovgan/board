@@ -6,7 +6,6 @@ import com.longboard.engine.card.CostBuilder;
 import com.longboard.entity.CardTest;
 import com.longboard.entity.IsPlayer;
 import com.longboard.entity.PlayerTest;
-import com.longboard.entity.card.IsCard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

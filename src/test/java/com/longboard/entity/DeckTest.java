@@ -1,9 +1,6 @@
 package com.longboard.entity;
 
-import com.longboard.entity.card.IsCard;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 

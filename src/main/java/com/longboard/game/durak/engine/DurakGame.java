@@ -205,7 +205,7 @@ public class DurakGame {
 	}
 
 	public DurakBattle getCurrentBattle() {
-		return battles.get(battles.size()-1);
+		return battles.get(battles.size() - 1);
 	}
 
 }

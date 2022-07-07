@@ -1,14 +1,10 @@
 package com.longboard.game.durak.display;
 
-import com.longboard.base.PlayerColor;
-import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
-import com.longboard.game.durak.engine.DurakPlayer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 class DisplayUtilsTest {
 
@@ -36,6 +32,7 @@ class DisplayUtilsTest {
 		DurakGame game = initGame();
 		Assertions.assertNotNull(displayUtils.endCurrentTurn(game, game.startBattle(null, game.defineFirstPlayer()), game.defineFirstPlayer()));
 	}
+
 	@Test
 	void testDefinePlayerScore() {
 		DurakGame game = initGame();

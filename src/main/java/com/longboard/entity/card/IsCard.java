@@ -8,7 +8,6 @@ import com.longboard.engine.card.CardEffectsHelper;
 import com.longboard.entity.IsPlayer;
 import com.longboard.entity.IsTarget;
 import com.longboard.entity.item.IsCardItem;
-import com.longboard.entity.item.IsItem;
 import com.longboard.exception.GameException;
 
 import java.util.UUID;
@@ -31,9 +30,11 @@ public interface IsCard extends IsTarget {
 
 	//TODO change to OwnerID
 	void setOwner(IsPlayer<IsCard> player);
+
 	void setOwnerId(UUID ownerId);
 
 	IsPlayer<IsCard> getOwner();
+
 	UUID getOwnerId();
 
 	default boolean hasOwner() {

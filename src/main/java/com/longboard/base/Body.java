@@ -13,8 +13,9 @@ public class Body {
 		Free, Equipped, Blocked, Absent
 	}
 
-	private Map<BodyPart, BodyStatus> body = new HashMap<>(Map.of(BodyPart.Head, BodyStatus.Free, BodyPart.LeftHand, BodyStatus.Free, BodyPart.RightHand, BodyStatus.Free,
-			BodyPart.Belt, BodyStatus.Free, BodyPart.LeftFeet, BodyStatus.Free, BodyPart.RightFeet, BodyStatus.Free, BodyPart.Body, BodyStatus.Free));
+	private Map<BodyPart, BodyStatus> body = new HashMap<>(
+			Map.of(BodyPart.Head, BodyStatus.Free, BodyPart.LeftHand, BodyStatus.Free, BodyPart.RightHand, BodyStatus.Free, BodyPart.Belt, BodyStatus.Free,
+					BodyPart.LeftFeet, BodyStatus.Free, BodyPart.RightFeet, BodyStatus.Free, BodyPart.Body, BodyStatus.Free));
 
 	public BodyStatus getBodyStatus(BodyPart bodyPart) {
 		return body.get(bodyPart);

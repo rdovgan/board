@@ -107,8 +107,8 @@ public class SimpleTest {
 	@Test
 	public void testBody() {
 		redPlayer.addCardsToHand(playersDeck);
-		IsCardItem swordCard = (IsCardItem) redPlayer.getHandCards().stream().filter(card -> TestResourcesPoolConstants.IRON_SWORD_CARD.getName().equals(card.getName()))
-				.findFirst().orElseThrow();
+		IsCardItem swordCard = (IsCardItem) redPlayer.getHandCards().stream()
+				.filter(card -> TestResourcesPoolConstants.IRON_SWORD_CARD.getName().equals(card.getName())).findFirst().orElseThrow();
 		Assertions.assertNotNull(swordCard);
 		Assertions.assertEquals(START_GOLD, redPlayer.getResource(Resource.Gold));
 		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.RightHand));
