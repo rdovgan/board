@@ -66,6 +66,11 @@ public class SimpleTest {
 		redPlayer.validate();
 		playersDeck = initDeck();
 	}
+	@Test
+	public void testEmptyPlayer() {
+		redPlayer = new PlayerTest("Test", PlayerColor.Red, new ArrayList<>(), new HashMap<>());
+		Assertions.assertThrows(GameException.class, redPlayer::validate);
+	}
 
 	@Test
 	public void testPlayer() {

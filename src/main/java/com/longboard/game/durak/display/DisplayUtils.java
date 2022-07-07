@@ -5,13 +5,18 @@ import com.longboard.entity.IsPlayer;
 import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.stream.Collectors;
 
 public class DisplayUtils {
+
+	public static final String PLAYERS_COUNT_COMBO_BOX = "ComboBox-PlayersCount";
 
 	public Panel defineTopPanel() {
 		Panel topPlayerPanel = new Panel();
@@ -33,6 +38,7 @@ public class DisplayUtils {
 		middlePanel.add(selectPlayerLabel);
 
 		JComboBox<Integer> playerCountBox = new JComboBox<>();
+		playerCountBox.setName(PLAYERS_COUNT_COMBO_BOX);
 		playerCountBox.addItem(2);
 		playerCountBox.addItem(3);
 		playerCountBox.addItem(4);
@@ -45,10 +51,32 @@ public class DisplayUtils {
 		confirmPlayersCountAndStartGame.setBounds(DurakGameDisplay.PADDING, DurakGameDisplay.PADDING * 2, DurakGameDisplay.PADDING * 5,
 				DurakGameDisplay.PADDING * 2);
 		confirmPlayersCountAndStartGame.addActionListener(e -> DurakGameDisplay.startGame(playerCountBox.getSelectedItem()));
+		confirmPlayersCountAndStartGame.addKeyListener(getKeyListener(playerCountBox));
+		confirmPlayersCountAndStartGame.requestFocus();
 		middlePanel.add(confirmPlayersCountAndStartGame);
 
 		middlePanel.setVisible(true);
 		return middlePanel;
+	}
+
+	private KeyListener getKeyListener(JComboBox<Integer> playerCountBox) {
+		return new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					System.out.println("Hello");
+					DurakGameDisplay.startGame(playerCountBox.getSelectedItem());
+				}
+			}
+		};
 	}
 
 	public Panel defineBottomPanel() {
@@ -101,6 +129,26 @@ public class DisplayUtils {
 
 			middlePanel.add(playersScore);
 		}
+	}
+
+
+	//TODO implement AI for battle
+	public DurakBattle autoBattle(DurakGame game, DurakBattle battle) {
+		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
+			//battle
+			PlayingCard36 cardToAttack = battle.getCardsForAttack().stream().findAny().orElse(null);
+			if (cardToAttack == null) {
+				break;
+			}
+			battle.playCardToAttack(cardToAttack);
+			PlayingCard36 cardToDefend = battle.getCardsForDefend(cardToAttack).stream().findFirst().orElse(null);
+			if (cardToDefend == null) {
+				break;
+			}
+			battle.playCardToDefend(cardToDefend, cardToAttack);
+		}
+		game.endBattle(battle);
+		return game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 	}
 
 }

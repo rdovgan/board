@@ -9,7 +9,9 @@ import com.longboard.game.durak.engine.DurakGame;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
+import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,11 @@ public class DurakGameDisplay extends Frame {
 
 	private static void prepareBoard(int playersCount) {
 		game.initialiseGame(playersCount);
+		startBattleAndDefineCardForAttack();
+		refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
+	}
+
+	public static void startBattleAndDefineCardForAttack() {
 		currentPlayer = game.getActivePlayers().get(0);
 		currentBattle = game.startBattle(null, game.defineFirstPlayer());
 		if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
@@ -67,26 +74,6 @@ public class DurakGameDisplay extends Frame {
 				currentBattle.playCardToAttack(cardToBeat);
 			}
 		}
-		refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
-	}
-
-	//TODO implement AI for battle
-	private static void autoBattle(DurakBattle battle) {
-		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
-			//battle
-			PlayingCard36 cardToAttack = battle.getCardsForAttack().stream().findAny().orElse(null);
-			if (cardToAttack == null) {
-				break;
-			}
-			battle.playCardToAttack(cardToAttack);
-			PlayingCard36 cardToDefend = battle.getCardsForDefend(cardToAttack).stream().findFirst().orElse(null);
-			if (cardToDefend == null) {
-				break;
-			}
-			battle.playCardToDefend(cardToDefend, cardToAttack);
-		}
-		game.endBattle(battle);
-		currentBattle = game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 	}
 
 	private static void currentPlayerPlayCard(PlayingCard36 card) {
@@ -126,7 +113,7 @@ public class DurakGameDisplay extends Frame {
 		//auto battle
 		if (currentBattle != null) {
 			while (currentBattle.getDefender().getId() != currentPlayer.getId() && currentBattle.getAttacker().getId() != currentPlayer.getId()) {
-				autoBattle(currentBattle);
+				currentBattle = displayUtils.autoBattle(game, currentBattle);
 			}
 		}
 
@@ -303,6 +290,18 @@ public class DurakGameDisplay extends Frame {
 
 	public static void main(String[] args) {
 		new DurakGameDisplay();
+	}
+
+	public void beginGame() {
+		if (middlePanel == null) {
+			return;
+		}
+		Component comboBox = Arrays.stream(middlePanel.getComponents()).filter(component -> DisplayUtils.PLAYERS_COUNT_COMBO_BOX.equals(component.getName())).findFirst().orElse(null);
+		if (!(comboBox instanceof JComboBox)) {
+			startGame(DurakGame.MIN_PLAYERS_COUNT);
+		} else {
+			startGame(((JComboBox<?>)(comboBox)).getSelectedItem());
+		}
 	}
 
 }

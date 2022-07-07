@@ -1,6 +1,9 @@
 package com.longboard.game.durak.display;
 
+import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -39,5 +42,16 @@ class DisplayUtilsTest {
 		Panel middlePanel = displayUtils.defineMiddlePanel();
 		displayUtils.definePlayerScore(middlePanel, game, game.startBattle(null, game.defineFirstPlayer()));
 		Assertions.assertNotNull(middlePanel.getComponent(0));
+	}
+
+	@Test
+	void autoBattle() {
+		DurakGame game = initGame();
+		DurakBattle battle = game.startBattle(null, game.defineFirstPlayer());
+		while (game.getActivePlayers().size() == 2) {
+			battle = displayUtils.autoBattle(game, battle);
+		}
+		Assertions.assertTrue(CollectionUtils.isEmpty(game.getDeck()));
+		Assertions.assertTrue(MapUtils.isNotEmpty(game.endGame()));
 	}
 }
