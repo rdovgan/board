@@ -6,10 +6,11 @@ import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
+import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -25,23 +26,22 @@ public class DurakGameDisplay extends Frame {
 	public static final int CARD_WIDTH = 57 * 3 / 2;
 	public static final int CARD_HEIGHT = 89 * 3 / 2;
 
-	private static Panel topPlayerPanel;
-	private static Panel bottomPlayerPanel;
-	private static Panel middlePanel;
+	private static final DisplayUtils displayUtils = new DisplayUtils();
+	private static final Panel topPlayerPanel = displayUtils.defineTopPanel();
+	private static final Panel middlePanel = displayUtils.defineMiddlePanel();
+	private static final Panel bottomPlayerPanel = displayUtils.defineBottomPanel();
 
-	private static DurakGame game = new DurakGame();
+	private static final DurakGame game = new DurakGame();
 	private static IsPlayer<PlayingCard36> currentPlayer = null;
 	private static DurakBattle currentBattle = null;
 	private static PlayingCard36 cardToBeat = null;
 
-	private static final DisplayUtils displayUtils = new DisplayUtils();
-
 	DurakGameDisplay() {
 		super.setSize(TOTAL_WIDTH + 2 * PADDING, TOTAL_HEIGHT + 4 * PADDING);
 
-		add(topPlayerPanel = displayUtils.defineTopPanel());
-		add(middlePanel = displayUtils.defineMiddlePanel());
-		add(bottomPlayerPanel = displayUtils.defineBottomPanel());
+		add(topPlayerPanel);
+		add(middlePanel);
+		add(bottomPlayerPanel);
 
 		add(new Panel());
 
@@ -58,6 +58,11 @@ public class DurakGameDisplay extends Frame {
 
 	private static void prepareBoard(int playersCount) {
 		game.initialiseGame(playersCount);
+		startBattleAndDefineCardForAttack();
+		refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
+	}
+
+	public static void startBattleAndDefineCardForAttack() {
 		currentPlayer = game.getActivePlayers().get(0);
 		currentBattle = game.startBattle(null, game.defineFirstPlayer());
 		if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
@@ -67,26 +72,6 @@ public class DurakGameDisplay extends Frame {
 				currentBattle.playCardToAttack(cardToBeat);
 			}
 		}
-		refreshBoard(topPlayerPanel, middlePanel, bottomPlayerPanel);
-	}
-
-	//TODO implement AI for battle
-	private static void autoBattle(DurakBattle battle) {
-		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
-			//battle
-			PlayingCard36 cardToAttack = battle.getCardsForAttack().stream().findAny().orElse(null);
-			if (cardToAttack == null) {
-				break;
-			}
-			battle.playCardToAttack(cardToAttack);
-			PlayingCard36 cardToDefend = battle.getCardsForDefend(cardToAttack).stream().findFirst().orElse(null);
-			if (cardToDefend == null) {
-				break;
-			}
-			battle.playCardToDefend(cardToDefend, cardToAttack);
-		}
-		game.endBattle(battle);
-		currentBattle = game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 	}
 
 	private static void currentPlayerPlayCard(PlayingCard36 card) {
@@ -126,7 +111,7 @@ public class DurakGameDisplay extends Frame {
 		//auto battle
 		if (currentBattle != null) {
 			while (currentBattle.getDefender().getId() != currentPlayer.getId() && currentBattle.getAttacker().getId() != currentPlayer.getId()) {
-				autoBattle(currentBattle);
+				currentBattle = displayUtils.autoBattle(game, currentBattle);
 			}
 		}
 
@@ -303,6 +288,19 @@ public class DurakGameDisplay extends Frame {
 
 	public static void main(String[] args) {
 		new DurakGameDisplay();
+	}
+
+	public void beginGame() {
+		if (middlePanel == null) {
+			return;
+		}
+		Component comboBox = Arrays.stream(middlePanel.getComponents()).filter(component -> DisplayUtils.PLAYERS_COUNT_COMBO_BOX.equals(component.getName()))
+				.findFirst().orElse(null);
+		if (!(comboBox instanceof JComboBox)) {
+			startGame(DurakGame.MIN_PLAYERS_COUNT);
+		} else {
+			startGame(((JComboBox<?>) (comboBox)).getSelectedItem());
+		}
 	}
 
 }

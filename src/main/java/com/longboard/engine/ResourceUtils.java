@@ -71,7 +71,7 @@ public class ResourceUtils {
 		return checkCost(player, cost);
 	}
 
-	public static boolean checkCost(IsPlayer player, IsCost cost) {
+	public static boolean checkCost(IsPlayer<?> player, IsCost cost) {
 		return cost.getCost().entrySet().stream().noneMatch(resourceCost -> checkResource(player, resourceCost.getKey(), resourceCost.getValue()) == null);
 	}
 

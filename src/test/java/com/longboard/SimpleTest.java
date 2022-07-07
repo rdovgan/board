@@ -68,6 +68,12 @@ public class SimpleTest {
 	}
 
 	@Test
+	public void testEmptyPlayer() {
+		redPlayer = new PlayerTest("Test", PlayerColor.Red, new ArrayList<>(), new HashMap<>());
+		Assertions.assertThrows(GameException.class, redPlayer::validate);
+	}
+
+	@Test
 	public void testPlayer() {
 		Assertions.assertNotNull(redPlayer);
 		Assertions.assertNotNull(redPlayer.getHandCards());

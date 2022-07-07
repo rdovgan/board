@@ -5,6 +5,7 @@ import com.longboard.entity.IsPlayer;
 import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
 import javax.swing.*;
@@ -12,6 +13,8 @@ import java.awt.*;
 import java.util.stream.Collectors;
 
 public class DisplayUtils {
+
+	public static final String PLAYERS_COUNT_COMBO_BOX = "ComboBox-PlayersCount";
 
 	public Panel defineTopPanel() {
 		Panel topPlayerPanel = new Panel();
@@ -33,6 +36,7 @@ public class DisplayUtils {
 		middlePanel.add(selectPlayerLabel);
 
 		JComboBox<Integer> playerCountBox = new JComboBox<>();
+		playerCountBox.setName(PLAYERS_COUNT_COMBO_BOX);
 		playerCountBox.addItem(2);
 		playerCountBox.addItem(3);
 		playerCountBox.addItem(4);
@@ -71,10 +75,10 @@ public class DisplayUtils {
 		try {
 			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
 				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+				return game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 			} else if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
 				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+				return game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 			}
 		} catch (Exception e) {
 			LogUtils.error(e.getMessage());
@@ -101,6 +105,25 @@ public class DisplayUtils {
 
 			middlePanel.add(playersScore);
 		}
+	}
+
+	//TODO implement AI for battle
+	public DurakBattle autoBattle(DurakGame game, DurakBattle battle) {
+		while (CollectionUtils.isNotEmpty(battle.getCardsForAttack())) {
+			//battle
+			PlayingCard36 cardToAttack = battle.getCardsForAttack().stream().findAny().orElse(null);
+			if (cardToAttack == null) {
+				break;
+			}
+			battle.playCardToAttack(cardToAttack);
+			PlayingCard36 cardToDefend = battle.getCardsForDefend(cardToAttack).stream().findFirst().orElse(null);
+			if (cardToDefend == null) {
+				break;
+			}
+			battle.playCardToDefend(cardToDefend, cardToAttack);
+		}
+		game.endBattle(battle);
+		return game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 	}
 
 }
