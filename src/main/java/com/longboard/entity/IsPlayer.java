@@ -6,6 +6,7 @@ import com.longboard.base.Resource;
 import com.longboard.base.TargetType;
 import com.longboard.engine.LogUtils;
 import com.longboard.entity.card.IsCard;
+import com.longboard.exception.GameException;
 import com.longboard.exception.InitialisationException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -114,9 +115,14 @@ public interface IsPlayer<C extends IsCard> extends IsTarget {
 	default void validate() {
 		if (getCurrentHealth() == 0) {
 			LogUtils.error("Wrong player initialisation. Health is zero");
+			throw new GameException("Wrong player initialisation. Health is zero");
 		}
-		if (getHandCards() == null || getHandCards().stream().anyMatch(card -> card.getOwner() == null)) {
+		if (getHandCards() == null) {
+			return;
+		}
+		if (getHandCards().stream().anyMatch(card -> card.getOwner() == null)) {
 			LogUtils.error("Wrong player initialisation. There is card in hand without owner link");
+			//throw new GameException("Wrong player initialisation. There is card in hand without owner link");
 		}
 	}
 
