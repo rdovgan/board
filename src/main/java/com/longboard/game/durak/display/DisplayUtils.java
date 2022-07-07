@@ -99,10 +99,10 @@ public class DisplayUtils {
 		try {
 			if (currentBattle.getAttacker().getId() == currentPlayer.getId()) {
 				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+				return game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 			} else if (currentBattle.getDefender().getId() == currentPlayer.getId()) {
 				game.endBattle(currentBattle);
-				currentBattle = game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
+				return game.startBattle(currentBattle, game.defineNextPlayerToAttack(currentBattle));
 			}
 		} catch (Exception e) {
 			LogUtils.error(e.getMessage());
@@ -130,7 +130,6 @@ public class DisplayUtils {
 			middlePanel.add(playersScore);
 		}
 	}
-
 
 	//TODO implement AI for battle
 	public DurakBattle autoBattle(DurakGame game, DurakBattle battle) {

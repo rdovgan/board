@@ -6,7 +6,6 @@ import com.longboard.game.durak.card.CardSuit;
 import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 
 import javax.swing.*;
@@ -27,23 +26,22 @@ public class DurakGameDisplay extends Frame {
 	public static final int CARD_WIDTH = 57 * 3 / 2;
 	public static final int CARD_HEIGHT = 89 * 3 / 2;
 
-	private static Panel topPlayerPanel;
-	private static Panel bottomPlayerPanel;
-	private static Panel middlePanel;
+	private static final DisplayUtils displayUtils = new DisplayUtils();
+	private static final Panel topPlayerPanel = displayUtils.defineTopPanel();
+	private static final Panel middlePanel = displayUtils.defineMiddlePanel();
+	private static final Panel bottomPlayerPanel = displayUtils.defineBottomPanel();
 
-	private static DurakGame game = new DurakGame();
+	private static final DurakGame game = new DurakGame();
 	private static IsPlayer<PlayingCard36> currentPlayer = null;
 	private static DurakBattle currentBattle = null;
 	private static PlayingCard36 cardToBeat = null;
 
-	private static final DisplayUtils displayUtils = new DisplayUtils();
-
 	DurakGameDisplay() {
 		super.setSize(TOTAL_WIDTH + 2 * PADDING, TOTAL_HEIGHT + 4 * PADDING);
 
-		add(topPlayerPanel = displayUtils.defineTopPanel());
-		add(middlePanel = displayUtils.defineMiddlePanel());
-		add(bottomPlayerPanel = displayUtils.defineBottomPanel());
+		add(topPlayerPanel);
+		add(middlePanel);
+		add(bottomPlayerPanel);
 
 		add(new Panel());
 
@@ -296,11 +294,12 @@ public class DurakGameDisplay extends Frame {
 		if (middlePanel == null) {
 			return;
 		}
-		Component comboBox = Arrays.stream(middlePanel.getComponents()).filter(component -> DisplayUtils.PLAYERS_COUNT_COMBO_BOX.equals(component.getName())).findFirst().orElse(null);
+		Component comboBox = Arrays.stream(middlePanel.getComponents()).filter(component -> DisplayUtils.PLAYERS_COUNT_COMBO_BOX.equals(component.getName()))
+				.findFirst().orElse(null);
 		if (!(comboBox instanceof JComboBox)) {
 			startGame(DurakGame.MIN_PLAYERS_COUNT);
 		} else {
-			startGame(((JComboBox<?>)(comboBox)).getSelectedItem());
+			startGame(((JComboBox<?>) (comboBox)).getSelectedItem());
 		}
 	}
 

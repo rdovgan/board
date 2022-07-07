@@ -14,13 +14,13 @@ class DurakGameDisplayTest {
 		DurakGameDisplay gameDisplay = new DurakGameDisplay();
 
 		int componentsCount = (int) Arrays.stream(gameDisplay.getComponents()).filter(component -> component instanceof Panel).collect(Collectors.toList())
-				.parallelStream().flatMap(component -> Arrays.stream(((Panel) (component)).getComponents())).count();;
+				.parallelStream().flatMap(component -> Arrays.stream(((Panel) (component)).getComponents())).count();
 		Assertions.assertEquals(3, componentsCount);
 
 		gameDisplay.beginGame();
 
 		componentsCount = (int) Arrays.stream(gameDisplay.getComponents()).filter(component -> component instanceof Panel).collect(Collectors.toList())
-				.parallelStream().flatMap(component -> Arrays.stream(((Panel) (component)).getComponents())).count();;
+				.parallelStream().flatMap(component -> Arrays.stream(((Panel) (component)).getComponents())).count();
 		Assertions.assertTrue(componentsCount > 10);
 	}
 

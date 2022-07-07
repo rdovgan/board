@@ -17,7 +17,6 @@ class ResourceUtilsTest {
 
 	private static final Integer START_MANA = 1;
 	private static final Integer START_GOLD = 10;
-	private static final Integer START_EXPERIENCE = 0;
 
 	private ResourceUtils resourceUtils = new ResourceUtils();
 
@@ -49,26 +48,28 @@ class ResourceUtilsTest {
 		PlayerTest greenPlayer = initPlayer();
 		Integer goldToSubtract = 2;
 		resourceUtils.subResourcesFromPlayer(greenPlayer, Resource.Gold, goldToSubtract);
+		Assertions.assertEquals(START_GOLD - goldToSubtract, greenPlayer.getResource(Resource.Gold));
 		Integer exceedGoldToSubtract = 12;
 		resourceUtils.subResourcesFromPlayer(greenPlayer, Resource.Gold, exceedGoldToSubtract);
+		Assertions.assertEquals(START_GOLD - goldToSubtract, greenPlayer.getResource(Resource.Gold));
 
-		resourceUtils.subResourcesFromPlayer(greenPlayer, Resource.Experience, exceedGoldToSubtract);
+		resourceUtils.subResourcesFromPlayer(greenPlayer, Resource.Experience, 1);
 	}
 
 	@Test
 	void isPlayable() {
-		resourceUtils.isPlayable(null);
+		Assertions.assertFalse(resourceUtils.isPlayable(null));
 		CardTest emptyCard = new CardTest(null, null, null, null, null, null, null);
-		resourceUtils.isPlayable(emptyCard);
+		Assertions.assertFalse(resourceUtils.isPlayable(emptyCard));
 		emptyCard.setOwner(initPlayer());
-		resourceUtils.isPlayable(emptyCard);
+		Assertions.assertFalse(resourceUtils.isPlayable(emptyCard));
 	}
 
 	@Test
 	void checkCost() {
 		PlayerTest greenPlayer = initPlayer();
-		ResourceUtils.checkCost(greenPlayer, new CostBuilder().addCost(Resource.Gold, 5).build());
-		ResourceUtils.checkCost(greenPlayer, new CostBuilder().build());
-		ResourceUtils.checkCost(null, new CostBuilder().build());
+		Assertions.assertFalse(ResourceUtils.checkCost(greenPlayer, new CostBuilder().addCost(Resource.Gold, 5).build()));
+		Assertions.assertFalse(ResourceUtils.checkCost(greenPlayer, new CostBuilder().build()));
+		Assertions.assertFalse(ResourceUtils.checkCost(null, new CostBuilder().build()));
 	}
 }

@@ -205,6 +205,6 @@ class DurakGameTest {
 		int playersCount = 4;
 		DurakGame game = new DurakGame();
 		game.initialiseGame(playersCount);
-		game.startBattle(null, game.defineFirstPlayer());
+		Assertions.assertNotNull(game.startBattle(null, game.defineFirstPlayer()));
 	}
 }
