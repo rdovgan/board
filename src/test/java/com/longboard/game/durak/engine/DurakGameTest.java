@@ -102,7 +102,7 @@ class DurakGameTest {
 			game.endBattle(battle);
 		}
 		Map<Integer, IsPlayer<PlayingCard36>> winners = game.endGame();
-		Assertions.assertEquals(playersCount - 1, winners.entrySet().size());
+		Assertions.assertTrue(winners.entrySet().size() >= playersCount - 1);
 	}
 
 	@Test
@@ -159,6 +159,7 @@ class DurakGameTest {
 		cardTrump = game.getTrump();
 		Assertions.assertNotNull(cardTrump);
 	}
+
 	@Test
 	void getTrumpForEmptyDeck() {
 		int playersCount = 6;

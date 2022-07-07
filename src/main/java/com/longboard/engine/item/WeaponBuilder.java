@@ -6,6 +6,7 @@ import com.longboard.entity.item.IsCardItem;
 import com.longboard.entity.item.IsEnhancementStone;
 import com.longboard.entity.item.IsItem;
 import com.longboard.entity.item.IsWeapon;
+import com.longboard.exception.GameException;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -42,6 +43,7 @@ public class WeaponBuilder implements IsWeapon {
 	public void validate() {
 		if (this.name == null || this.description == null || this.damage == null) {
 			LogUtils.error("Wrong weapon initialisation");
+			throw new GameException("Wrong weapon initialisation");
 		}
 	}
 
