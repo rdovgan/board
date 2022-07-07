@@ -23,19 +23,16 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Send Report to Codacy
         env:
-          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
+          DISPLAY: ":0.0"
+        run: mvn -B package --file pom.xml
 
   report:
-    
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Send Report to Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          DISPLAY: ":0.0"
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh)
     
