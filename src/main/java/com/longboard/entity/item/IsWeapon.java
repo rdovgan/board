@@ -10,7 +10,7 @@ public interface IsWeapon extends IsItem {
 
 	@Override
 	default Body.BodyPart appliedTo() {
-		return Body.BodyPart.RightArm;
+		return Body.BodyPart.RightHand;
 	}
 
 	@Override

@@ -1,11 +1,18 @@
 package com.longboard;
 
+import com.longboard.base.Body;
+import com.longboard.base.ItemType;
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
+import com.longboard.base.TargetType;
+import com.longboard.engine.ResourceUtils;
 import com.longboard.entity.CardTest;
 import com.longboard.entity.IsPlayer;
 import com.longboard.entity.PlayerTest;
 import com.longboard.entity.card.IsCard;
+import com.longboard.entity.item.IsCardItem;
+import com.longboard.entity.item.IsItem;
+import com.longboard.exception.GameException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,8 +36,10 @@ public class SimpleTest {
 	private static final Integer START_EXPERIENCE = 0;
 	private static final Integer HUGE_DAMAGE = -25;
 
-	private List<IsCard> initHand() {
-		List<IsCard> hand = new ArrayList<>();
+	private ResourceUtils resourceUtils = new ResourceUtils();
+
+	private List<CardTest> initHand() {
+		List<CardTest> hand = new ArrayList<>();
 		hand.add(TestResourcesPoolConstants.HEALING_SPELL);
 		return hand;
 	}
@@ -56,6 +65,12 @@ public class SimpleTest {
 		redPlayer = initPlayer();
 		redPlayer.validate();
 		playersDeck = initDeck();
+	}
+
+	@Test
+	public void testEmptyPlayer() {
+		redPlayer = new PlayerTest("Test", PlayerColor.Red, new ArrayList<>(), new HashMap<>());
+		Assertions.assertThrows(GameException.class, redPlayer::validate);
 	}
 
 	@Test
@@ -85,12 +100,35 @@ public class SimpleTest {
 				.findFirst().orElseThrow();
 		Assertions.assertNotNull(healSpell);
 		Assertions.assertTrue(redPlayer.getHandCards().contains(healSpell));
-		healSpell.play();
+		Assertions.assertEquals(TargetType.Card, healSpell.getTargetType());
+		Assertions.assertThrows(GameException.class, healSpell::play);
 		Assertions.assertTrue(redPlayer.getHandCards().contains(healSpell));
 		redPlayer.changeHealth(HUGE_DAMAGE);
 		Assertions.assertEquals(IsPlayer.MAX_HEALTH + HUGE_DAMAGE, redPlayer.getCurrentHealth());
 		healSpell.play();
 		Assertions.assertFalse(redPlayer.getHandCards().contains(healSpell));
 		Assertions.assertEquals(IsPlayer.MAX_HEALTH + HUGE_DAMAGE + 10, redPlayer.getCurrentHealth());
+	}
+
+	@Test
+	public void testBody() {
+		redPlayer.addCardsToHand(playersDeck);
+		IsCardItem swordCard = (IsCardItem) redPlayer.getHandCards().stream()
+				.filter(card -> TestResourcesPoolConstants.IRON_SWORD_CARD.getName().equals(card.getName())).findFirst().orElseThrow();
+		Assertions.assertNotNull(swordCard);
+		Assertions.assertEquals(START_GOLD, redPlayer.getResource(Resource.Gold));
+		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.RightHand));
+		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.LeftHand));
+		Assertions.assertTrue(resourceUtils.isPlayable(swordCard));
+		swordCard.play();
+		Assertions.assertThrows(GameException.class, swordCard::play);
+		Assertions.assertEquals(TargetType.Item, swordCard.getItem().getTargetType());
+		Assertions.assertEquals(START_GOLD - 10, redPlayer.getResource(Resource.Gold));
+		Assertions.assertEquals(Body.BodyStatus.Equipped, redPlayer.getBody().getBodyStatus(Body.BodyPart.RightHand));
+		Assertions.assertEquals(Body.BodyStatus.Free, redPlayer.getBody().getBodyStatus(Body.BodyPart.LeftHand));
+		IsItem sword = swordCard.getItem();
+		Assertions.assertEquals(redPlayer.getId(), sword.getOwner().getId());
+		Assertions.assertEquals(TargetType.Item, sword.getTargetType());
+		Assertions.assertEquals(ItemType.Weapon, sword.getType());
 	}
 }

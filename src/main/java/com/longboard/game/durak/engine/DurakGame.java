@@ -105,15 +105,19 @@ public class DurakGame {
 				}
 			}
 		}
-		LogUtils.error("Couldn't find attacker in active pool of players");
-		return null;
+		return this.activePlayers.stream().findFirst().orElse(null);
 	}
 
 	public IsPlayer<PlayingCard36> defineNextPlayerToAttack(DurakBattle endedBattle) {
-		if (endedBattle.getAttacker().getId() == endedBattle.defineWinner().getId()) {
+		if (endedBattle == null) {
+			return defineFirstPlayer();
+		}
+		if (endedBattle.getAttacker().getId() == endedBattle.defineWinner().getId() && CollectionUtils.isNotEmpty(endedBattle.getAttacker().getHandCards())) {
 			return definePlayerToAttack(endedBattle.getDefender());
-		} else {
+		} else if (CollectionUtils.isNotEmpty(endedBattle.getDefender().getHandCards())) {
 			return endedBattle.getDefender();
+		} else {
+			return definePlayerToAttack(endedBattle.getDefender());
 		}
 	}
 
@@ -128,12 +132,7 @@ public class DurakGame {
 			return null;
 		}
 		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
-		//TODO check if currentPlayer is active
-		if (previousBattle == null) {
-			//first battle
-			return newBattle;
-		}
-		battles.add(previousBattle);
+		battles.add(newBattle);
 		return newBattle;
 	}
 
@@ -203,6 +202,10 @@ public class DurakGame {
 	private void movePlayerToWinnerList(IsPlayer<PlayingCard36> player) {
 		activePlayers.remove(player);
 		playersScore.put(playersScore.size() + 1, player);
+	}
+
+	public DurakBattle getCurrentBattle() {
+		return battles.get(battles.size() - 1);
 	}
 
 }

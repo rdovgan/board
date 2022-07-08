@@ -7,6 +7,7 @@ import com.longboard.entity.IsPlayer;
 import com.longboard.entity.item.IsCardItem;
 import com.longboard.entity.item.IsEnhancementStone;
 import com.longboard.entity.item.IsItem;
+import com.longboard.exception.GameException;
 
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -46,10 +47,12 @@ public class ItemBuilder implements IsItem {
 		return this;
 	}
 
-	public void validate() {
+	public ItemBuilder validate() {
 		if (this.name == null || this.appliedTo == null || this.type == null || this.description == null) {
 			LogUtils.error("Wrong item initialisation");
+			throw new GameException("Wrong item initialisation");
 		}
+		return this;
 	}
 
 	public IsItem build() {

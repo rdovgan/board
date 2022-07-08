@@ -3,7 +3,6 @@ package com.longboard.entity;
 import com.longboard.base.Body;
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
-import com.longboard.entity.card.IsCard;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 
 import java.util.ArrayList;
@@ -11,20 +10,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerTest implements IsPlayer {
+public class PlayerTest implements IsPlayer<CardTest> {
 
 	private final UUID id = UUID.randomUUID();
 
 	private String name;
 	private PlayerColor color;
 	private Body body = new Body();
-	private List<IsCard> hand = new ArrayList<>();
-	private List<IsCard> discard = new ArrayList<>();
-	private List<IsCard> table = new ArrayList<>();
+	private List<CardTest> hand = new ArrayList<>();
+	private List<CardTest> discard = new ArrayList<>();
+	private List<CardTest> table = new ArrayList<>();
 	private Map<Resource, Integer> resources;
 	private ContinuousEffects continuousEffects = new ContinuousEffects(new DualLinkedHashBidiMap<>());
 
-	public PlayerTest(String name, PlayerColor color, List<IsCard> hand, Map<Resource, Integer> resources) {
+	public PlayerTest(String name, PlayerColor color, List<CardTest> hand, Map<Resource, Integer> resources) {
 		this.name = name;
 		this.color = color;
 		this.hand = hand;
@@ -84,17 +83,17 @@ public class PlayerTest implements IsPlayer {
 	}
 
 	@Override
-	public List<IsCard> getHandCards() {
+	public List<CardTest> getHandCards() {
 		return hand;
 	}
 
 	@Override
-	public List<IsCard> getDiscardCards() {
+	public List<CardTest> getDiscardCards() {
 		return discard;
 	}
 
 	@Override
-	public List<IsCard> getTableCards() {
+	public List<CardTest> getTableCards() {
 		return table;
 	}
 

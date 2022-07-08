@@ -1,7 +1,9 @@
 package com.longboard.engine.card;
 
+import com.longboard.base.Body;
 import com.longboard.base.Resource;
 import com.longboard.engine.LogUtils;
+import com.longboard.entity.IsPlayer;
 import com.longboard.entity.card.IsCard;
 import com.longboard.entity.item.IsCardItem;
 import com.longboard.entity.item.IsItem;
@@ -38,8 +40,15 @@ public class CardEffectsHelper {
 
 	public static Consumer<IsCard> equipItem(IsItem item) {
 		return card -> {
-			LogUtils.info("Equipped item " + item.getName() + " for player " + card.getOwner());
 			item.equip(card.getOwner());
+			LogUtils.info("Equipped item " + item.getName() + " for player " + card.getOwner());
 		};
+	}
+
+	public static boolean canEquip(IsItem item, IsPlayer player) {
+		if (item == null || player == null) {
+			return false;
+		}
+		return player.getBody().getBodyStatus(item.appliedTo()) == Body.BodyStatus.Free;
 	}
 }
