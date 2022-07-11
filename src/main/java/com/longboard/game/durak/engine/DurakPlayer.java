@@ -3,8 +3,10 @@ package com.longboard.game.durak.engine;
 import com.longboard.base.Body;
 import com.longboard.base.PlayerColor;
 import com.longboard.base.Resource;
+import com.longboard.engine.LogUtils;
 import com.longboard.entity.ContinuousEffects;
 import com.longboard.entity.IsPlayer;
+import com.longboard.exception.GameException;
 import com.longboard.game.durak.card.PlayingCard36;
 
 import java.util.List;
@@ -27,6 +29,17 @@ public class DurakPlayer implements IsPlayer<PlayingCard36> {
 		this.color = color;
 		cards.forEach(card -> card.setOwnerId(getId()));
 		this.hand = cards;
+	}
+
+	@Override
+	public void validate() {
+		if (getHandCards() == null) {
+			return;
+		}
+		if (getHandCards().stream().anyMatch(card -> card.getOwnerId() == null)) {
+			LogUtils.error("Wrong player initialisation. There is card in hand without owner link");
+			throw new GameException("Wrong player initialisation. There is card in hand without owner link");
+		}
 	}
 
 	@Override
