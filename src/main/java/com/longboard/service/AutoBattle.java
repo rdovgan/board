@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class AutoBattle {
 
-	public Map<Integer, IsPlayer<PlayingCard36>> startAutoBattle(Integer playersCount) {
+	public Map<Integer, IsPlayer<PlayingCard36>> startAutoGame(Integer playersCount) {
 		if (playersCount == null) {
 			throw new GameException("Wrong players count");
 		}
@@ -21,9 +21,17 @@ public class AutoBattle {
 
 		while (!game.isGameFinished()) {
 			battle = game.startBattle(null, game.defineNextPlayerToAttack(battle));
+			processAutoBattle(battle);
+			game.endBattle(battle);
 		}
 
 		return game.getScore();
+	}
+
+	public void processAutoBattle(DurakBattle battle) {
+		PlayingCard36 attackCard = battle.getCardsForAttack().stream().findFirst().orElse(null);
+		battle.playCardToAttack(attackCard);
+		battle.getCardsForDefend(attackCard).stream().findFirst().ifPresent(defendCard -> battle.playCardToDefend(defendCard, attackCard));
 	}
 
 }
