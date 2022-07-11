@@ -87,7 +87,7 @@ public class DisplayUtils {
 	}
 
 	public void definePlayerScore(Panel middlePanel, DurakGame game, DurakBattle currentBattle) {
-		if (currentBattle == null && MapUtils.isNotEmpty(game.endGame())) {
+		if (currentBattle == null && MapUtils.isNotEmpty(game.getScore())) {
 			middlePanel.removeAll();
 
 			Panel playersScore = new Panel();
@@ -95,7 +95,7 @@ public class DisplayUtils {
 					DurakGameDisplay.CARD_HEIGHT + 2 * DurakGameDisplay.PADDING);
 			Label playersScoreLabel = new Label();
 			playersScoreLabel.setText(
-					game.endGame().entrySet().stream().map(entry -> entry.getKey() + ". " + entry.getValue().getName()).collect(Collectors.joining("\n")));
+					game.getScore().entrySet().stream().map(entry -> entry.getKey() + ". " + entry.getValue().getName()).collect(Collectors.joining("\n")));
 			playersScoreLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 			playersScoreLabel.setBounds(DurakGameDisplay.PADDING, DurakGameDisplay.PADDING, DurakGameDisplay.CARD_WIDTH * 2,
 					DurakGameDisplay.CARD_HEIGHT + 2 * DurakGameDisplay.PADDING);

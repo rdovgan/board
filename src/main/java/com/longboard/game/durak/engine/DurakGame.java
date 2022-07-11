@@ -121,7 +121,7 @@ public class DurakGame {
 		}
 	}
 
-	public Map<Integer, IsPlayer<PlayingCard36>> endGame() {
+	public Map<Integer, IsPlayer<PlayingCard36>> getScore() {
 		return playersScore;
 	}
 
@@ -132,7 +132,7 @@ public class DurakGame {
 	public DurakBattle startBattle(DurakBattle previousBattle, IsPlayer<PlayingCard36> attacker) {
 		IsPlayer<PlayingCard36> defender = definePlayerToAttack(attacker);
 		if (attacker == null || defender == null || attacker.getId() == defender.getId()) {
-			endGame();
+			getScore();
 			return null;
 		}
 		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
