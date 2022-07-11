@@ -52,6 +52,6 @@ class DisplayUtilsTest {
 			battle = displayUtils.autoBattle(game, battle);
 		}
 		Assertions.assertTrue(CollectionUtils.isEmpty(game.getDeck()));
-		Assertions.assertTrue(MapUtils.isNotEmpty(game.endGame()));
+		Assertions.assertTrue(MapUtils.isNotEmpty(game.getScore()));
 	}
 }

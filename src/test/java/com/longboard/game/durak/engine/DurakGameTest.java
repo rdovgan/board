@@ -101,7 +101,7 @@ class DurakGameTest {
 			}
 			game.endBattle(battle);
 		}
-		Map<Integer, IsPlayer<PlayingCard36>> winners = game.endGame();
+		Map<Integer, IsPlayer<PlayingCard36>> winners = game.getScore();
 		Assertions.assertTrue(winners.entrySet().size() >= playersCount - 1);
 	}
 
