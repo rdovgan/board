@@ -3,6 +3,7 @@ package com.longboard.service;
 import com.longboard.entity.IsPlayer;
 import com.longboard.exception.GameException;
 import com.longboard.game.durak.card.PlayingCard36;
+import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
 
 import java.util.Map;
@@ -16,7 +17,13 @@ public class AutoBattle {
 		DurakGame game = new DurakGame();
 		game.initialiseGame(playersCount);
 
-		return game.endGame();
+		DurakBattle battle = null;
+
+		while (!game.isGameFinished()) {
+			battle = game.startBattle(null, game.defineNextPlayerToAttack(battle));
+		}
+
+		return game.getScore();
 	}
 
 }
