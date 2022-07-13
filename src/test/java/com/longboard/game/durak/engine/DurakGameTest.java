@@ -90,9 +90,8 @@ class DurakGameTest {
 		DurakGame game = new DurakGame();
 		game.initialiseGame(playersCount);
 		DurakBattle battle = null;
-		while (game.getActivePlayers().size() > 1) {
-			IsPlayer<PlayingCard36> attacker = game.defineNextPlayerToAttack(battle);
-			battle = game.startBattle(battle, attacker);
+		while (!game.isGameFinished()) {
+			battle = game.startBattle(battle, game.defineNextPlayerToAttack(battle));
 			PlayingCard36 attackCard = battle.getCardsForAttack().stream().findFirst().orElse(null);
 			battle.playCardToAttack(attackCard);
 			PlayingCard36 defendCard = battle.getCardsForDefend(attackCard).stream().findFirst().orElse(null);
@@ -101,7 +100,7 @@ class DurakGameTest {
 			}
 			game.endBattle(battle);
 		}
-		Map<Integer, IsPlayer<PlayingCard36>> winners = game.endGame();
+		Map<Integer, IsPlayer<PlayingCard36>> winners = game.getScore();
 		Assertions.assertTrue(winners.entrySet().size() >= playersCount - 1);
 	}
 

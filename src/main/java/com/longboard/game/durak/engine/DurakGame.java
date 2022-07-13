@@ -121,14 +121,17 @@ public class DurakGame {
 		}
 	}
 
-	public Map<Integer, IsPlayer<PlayingCard36>> endGame() {
+	public Map<Integer, IsPlayer<PlayingCard36>> getScore() {
 		return playersScore;
+	}
+
+	public boolean isGameFinished() {
+		return CollectionUtils.isEmpty(activePlayers) || activePlayers.size() == 1;
 	}
 
 	public DurakBattle startBattle(DurakBattle previousBattle, IsPlayer<PlayingCard36> attacker) {
 		IsPlayer<PlayingCard36> defender = definePlayerToAttack(attacker);
 		if (attacker == null || defender == null || attacker.getId() == defender.getId()) {
-			endGame();
 			return null;
 		}
 		DurakBattle newBattle = new DurakBattle(attacker, defender, getTrump().getSuit(), previousBattle);
