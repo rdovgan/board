@@ -1,16 +1,19 @@
-package com.longboard.game.durak.service;
+package com.longboard.game.durak.report;
 
 import com.longboard.entity.IsPlayer;
 import com.longboard.exception.GameException;
 import com.longboard.game.durak.card.PlayingCard36;
 import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
+import com.longboard.game.durak.report.DurakGameResult;
 
 import java.util.Map;
 
-public class AutoBattle {
+public class DurakAutoBattle {
 
-	public Map<Integer, IsPlayer<PlayingCard36>> startAutoGame(Integer playersCount) {
+	private DurakReportUtils durakReportUtils = new DurakReportUtils();
+
+	public DurakGame startAutoGame(Integer playersCount) {
 		if (playersCount == null) {
 			throw new GameException("Wrong players count");
 		}
@@ -25,7 +28,12 @@ public class AutoBattle {
 			game.endBattle(battle);
 		}
 
-		return game.getScore();
+		return game;
+	}
+
+	public void processAutoGameAndSaveScore(Integer playersCount) {
+		DurakGame game = startAutoGame(playersCount);
+		DurakGameResult gameResult = durakReportUtils.generateReport(game);
 	}
 
 	public void processAutoBattle(DurakBattle battle) {
