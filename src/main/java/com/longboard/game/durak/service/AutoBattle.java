@@ -1,4 +1,4 @@
-package com.longboard.service;
+package com.longboard.game.durak.service;
 
 import com.longboard.entity.IsPlayer;
 import com.longboard.exception.GameException;
