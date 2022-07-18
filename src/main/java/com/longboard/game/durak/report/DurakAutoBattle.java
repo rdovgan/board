@@ -7,11 +7,12 @@ import com.longboard.game.durak.engine.DurakBattle;
 import com.longboard.game.durak.engine.DurakGame;
 import com.longboard.game.durak.report.DurakGameResult;
 
+import java.util.List;
 import java.util.Map;
 
 public class DurakAutoBattle {
 
-	private DurakReportUtils durakReportUtils = new DurakReportUtils();
+	private final DurakReportUtils durakReportUtils = new DurakReportUtils();
 
 	public DurakGame startAutoGame(Integer playersCount) {
 		if (playersCount == null) {
@@ -33,7 +34,8 @@ public class DurakAutoBattle {
 
 	public void processAutoGameAndSaveScore(Integer playersCount) {
 		DurakGame game = startAutoGame(playersCount);
-		DurakGameResult gameResult = durakReportUtils.generateReport(game);
+		List<DurakGameResult> gameResults = durakReportUtils.generateReport(game);
+		//TODO store results to file
 	}
 
 	public void processAutoBattle(DurakBattle battle) {
