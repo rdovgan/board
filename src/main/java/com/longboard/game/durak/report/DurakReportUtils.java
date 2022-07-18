@@ -32,7 +32,7 @@ public class DurakReportUtils {
 		if (playersCount == null || playerRank == null || playerRank <= 0 || playersCount <= 1 || playerRank > playersCount) {
 			return 0.0;
 		}
-		return 1.0 - 1.0 / (playersCount - 1.0) * (playerRank - 1.0);
+		return Math.round((1.0 - 1.0 / (playersCount - 1.0) * (playerRank - 1.0)) * 100.0) / 100.0;
 	}
 
 }
