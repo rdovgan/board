@@ -22,6 +22,15 @@ public class DurakReportUtils {
 			gameResult.setScore(playerScore.getKey());
 			gameResult.setPlayersCount(allPlayersCount);
 			gameResult.setPlayerRank(defineGameRankForPlayer(playerScore.getKey(), allPlayersCount));
+//			gameResult.setFirstPlayedCardRank(card);
+			gameResults.add(gameResult);
+		}
+		if (durakGame.getActivePlayers().size() == 1) {
+			DurakGameResult gameResult = new DurakGameResult();
+			gameResult.setScore(allPlayersCount);
+			gameResult.setPlayersCount(allPlayersCount);
+			gameResult.setPlayerRank(defineGameRankForPlayer(allPlayersCount, allPlayersCount));
+//			gameResult.setFirstPlayedCardRank(card);
 			gameResults.add(gameResult);
 		}
 
