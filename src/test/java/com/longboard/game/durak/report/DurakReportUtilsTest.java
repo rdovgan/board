@@ -1,5 +1,10 @@
 package com.longboard.game.durak.report;
 
+import com.longboard.entity.IsPlayer;
+import com.longboard.game.durak.card.PlayingCard36;
+import com.longboard.game.durak.engine.DurakBattle;
+import com.longboard.game.durak.engine.DurakGame;
+import com.longboard.game.durak.engine.DurakPlayer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -49,4 +54,33 @@ class DurakReportUtilsTest {
 		Assertions.assertEquals(0.67, durakReportUtils.defineGameRankForPlayer(2, 4));
 		Assertions.assertEquals(0.33, durakReportUtils.defineGameRankForPlayer(3, 4));
 	}
+
+	@Test
+	void defineFirstPlayerCardForPlayer() {
+		int playersCount = 2;
+		DurakGame game = new DurakGame();
+		game.initialiseGame(playersCount);
+
+		Assertions.assertEquals(0, durakReportUtils.defineFirstPlayerCardRankForPlayer(null, game.getActivePlayers().stream().findFirst().orElse(null)));
+		Assertions.assertEquals(0, durakReportUtils.defineFirstPlayerCardRankForPlayer(game, null));
+		Assertions.assertNull(durakReportUtils.defineFirstPlayerCardForPlayer(null, game.getActivePlayers().stream().findFirst().orElse(null)));
+		Assertions.assertNull(durakReportUtils.defineFirstPlayerCardForPlayer(game, null));
+
+		IsPlayer<PlayingCard36> firstPlayer = game.defineFirstPlayer();
+		DurakBattle battle = game.startBattle(null, firstPlayer);
+		PlayingCard36 attackCard = battle.getCardsForAttack().stream().findFirst().orElse(null);
+		battle.playCardToAttack(attackCard);
+		PlayingCard36 defendCard = battle.getCardsForDefend(attackCard).stream().findFirst().orElse(null);
+		if (defendCard != null) {
+			battle.playCardToDefend(defendCard, attackCard);
+		}
+		game.endBattle(battle);
+
+		Assertions.assertNotNull(attackCard);
+		Assertions.assertEquals(attackCard, durakReportUtils.defineFirstPlayerCardForPlayer(game, firstPlayer));
+		Assertions.assertEquals(attackCard.getRank().getValue(), durakReportUtils.defineFirstPlayerCardRankForPlayer(game, firstPlayer));
+		Assertions.assertNull(durakReportUtils.defineFirstPlayerCardForPlayer(game, battle.getDefender()));
+		Assertions.assertEquals(0, durakReportUtils.defineFirstPlayerCardRankForPlayer(game, battle.getDefender()));
+	}
+
 }
